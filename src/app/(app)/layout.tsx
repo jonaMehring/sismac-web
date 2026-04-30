@@ -8,13 +8,17 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
   if (!user) redirect('/login')
 
-  const { data: perfil } = await supabase
+  const { data: perfil, error: perfilError } = await supabase
     .from('usuarios')
     .select('*')
     .eq('id', user.id)
     .single()
 
-  if (!perfil) redirect('/login')
+  if (!perfil || perfilError) {
+    // Sign out so middleware doesn't redirect back here in a loop
+    await supabase.auth.signOut()
+    redirect('/login')
+  }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return <AppShell user={perfil as any}>{children}</AppShell>
