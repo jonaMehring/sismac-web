@@ -1,14 +1,13 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 import { createClient } from '@/lib/supabase/client'
-import { Eye, EyeOff, Loader2, AlertCircle, FlaskConical } from 'lucide-react'
-
-const IS_DEMO = process.env.NEXT_PUBLIC_DEMO_MODE === 'true'
+import { Eye, EyeOff, Loader2, AlertCircle } from 'lucide-react'
 
 export default function LoginPage() {
-  const [email, setEmail] = useState(IS_DEMO ? 'admin@sismac.app' : '')
-  const [password, setPassword] = useState(IS_DEMO ? 'demo1234' : '')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -17,11 +16,6 @@ export default function LoginPage() {
     e.preventDefault()
     setLoading(true)
     setError('')
-
-    if (IS_DEMO) {
-      window.location.href = '/dashboard'
-      return
-    }
 
     const supabase = createClient()
     const { error } = await supabase.auth.signInWithPassword({ email, password })
@@ -32,98 +26,134 @@ export default function LoginPage() {
       return
     }
 
-    // Full page reload ensures the server picks up the new session cookies
     window.location.href = '/dashboard'
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        {/* Logo */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-2xl mb-4">
-            <span className="text-white text-2xl font-bold">S</span>
-          </div>
-          <h1 className="text-3xl font-bold text-white">SISMAC</h1>
-          <p className="text-slate-400 mt-1 text-sm">Sistema de Gestión Empresarial</p>
+    <div className="min-h-screen flex" style={{ background: 'linear-gradient(135deg, #0C1A47 0%, #0f2060 50%, #0C1A47 100%)' }}>
+
+      {/* Left panel — branding */}
+      <div className="hidden lg:flex flex-col justify-between w-[45%] px-14 py-12"
+        style={{ borderRight: '1px solid rgba(255,255,255,0.07)' }}>
+        <div>
+          <Image
+            src="/logo-sismac.png"
+            alt="SISMAC"
+            width={160}
+            height={65}
+            className="object-contain"
+            priority
+          />
         </div>
-
-        {/* Demo banner */}
-        {IS_DEMO && (
-          <div className="flex items-center gap-2 bg-amber-500/20 border border-amber-500/40 text-amber-300 rounded-xl px-4 py-3 mb-4 text-sm">
-            <FlaskConical className="w-4 h-4 shrink-0" />
-            <span><strong>Modo Demo</strong> — datos de ejemplo, sin base de datos real. Cualquier credencial funciona.</span>
-          </div>
-        )}
-
-        {/* Card */}
-        <div className="bg-white rounded-2xl shadow-2xl p-8">
-          <h2 className="text-xl font-semibold text-slate-800 mb-6">Ingresar al sistema</h2>
-
-          {error && (
-            <div className="flex items-center gap-2 bg-red-50 text-red-700 rounded-lg px-4 py-3 mb-5 text-sm">
-              <AlertCircle className="w-4 h-4 shrink-0" />
-              {error}
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                Correo electrónico
-              </label>
-              <input
-                type="email"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                required
-                autoComplete="email"
-                placeholder="usuario@empresa.com"
-                className="w-full px-4 py-3 rounded-xl border border-slate-200 text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                Contraseña
-              </label>
-              <div className="relative">
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  value={password}
-                  onChange={e => setPassword(e.target.value)}
-                  required
-                  autoComplete="current-password"
-                  placeholder="••••••••"
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm pr-12"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
-                >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </button>
+        <div>
+          <h1 className="text-4xl font-bold text-white leading-tight mb-4">
+            Gestión integral<br />
+            <span style={{ color: '#06B6D4' }}>sin límites.</span>
+          </h1>
+          <p className="text-white/50 text-base leading-relaxed max-w-sm">
+            Operaciones, finanzas y compliance en una sola plataforma diseñada para tu empresa.
+          </p>
+          <div className="flex gap-6 mt-10">
+            {[
+              { label: 'Módulos integrados', value: '4+' },
+              { label: 'Tiempo real', value: '100%' },
+              { label: 'Seguro', value: 'RLS' },
+            ].map(s => (
+              <div key={s.label}>
+                <p className="text-2xl font-bold text-white">{s.value}</p>
+                <p className="text-xs text-white/40 mt-0.5">{s.label}</p>
               </div>
+            ))}
+          </div>
+        </div>
+        <p className="text-white/20 text-xs">© {new Date().getFullYear()} SISMAC. Todos los derechos reservados.</p>
+      </div>
+
+      {/* Right panel — form */}
+      <div className="flex-1 flex items-center justify-center px-6 py-12">
+        <div className="w-full max-w-[400px]">
+
+          {/* Mobile logo */}
+          <div className="lg:hidden flex justify-center mb-8">
+            <div className="bg-white rounded-2xl px-4 py-2 shadow-lg">
+              <Image src="/logo-sismac.png" alt="SISMAC" width={120} height={50} className="object-contain" priority />
+            </div>
+          </div>
+
+          {/* Card */}
+          <div className="bg-white rounded-3xl p-8 shadow-2xl" style={{ boxShadow: '0 24px 64px rgba(0,0,0,0.3)' }}>
+            <div className="mb-7">
+              <h2 className="text-2xl font-bold text-slate-900">Bienvenido</h2>
+              <p className="text-sm text-slate-400 mt-1">Ingresá tus credenciales para continuar</p>
             </div>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-semibold py-3 rounded-xl transition-colors mt-2"
-            >
-              {loading ? (
-                <><Loader2 className="w-4 h-4 animate-spin" /> Ingresando...</>
-              ) : (
-                IS_DEMO ? 'Entrar al Demo' : 'Ingresar'
-              )}
-            </button>
-          </form>
-        </div>
+            {error && (
+              <div className="flex items-center gap-2.5 bg-red-50 text-red-700 rounded-xl px-4 py-3 mb-5 text-sm border border-red-100">
+                <AlertCircle className="w-4 h-4 shrink-0" />
+                {error}
+              </div>
+            )}
 
-        <p className="text-center text-slate-500 text-xs mt-6">
-          © {new Date().getFullYear()} SISMAC. Todos los derechos reservados.
-        </p>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-1.5">
+                  Correo electrónico
+                </label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  required
+                  autoComplete="email"
+                  autoFocus
+                  placeholder="usuario@empresa.com"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:border-transparent text-sm transition-all"
+                  style={{ '--tw-ring-color': '#06B6D4' } as React.CSSProperties}
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-1.5">
+                  Contraseña
+                </label>
+                <div className="relative">
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    value={password}
+                    onChange={e => setPassword(e.target.value)}
+                    required
+                    autoComplete="current-password"
+                    placeholder="••••••••"
+                    className="w-full px-4 py-3 pr-12 rounded-xl border border-slate-200 bg-slate-50 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:border-transparent text-sm transition-all"
+                    style={{ '--tw-ring-color': '#06B6D4' } as React.CSSProperties}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5"
+                  >
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full flex items-center justify-center gap-2 text-white font-semibold py-3.5 rounded-xl transition-all mt-2 disabled:opacity-70"
+                style={{ background: loading ? '#94a3b8' : 'linear-gradient(135deg, #0C1A47, #1e3a8a)', boxShadow: loading ? 'none' : '0 4px 14px rgba(13,27,75,0.4)' }}
+              >
+                {loading ? (
+                  <><Loader2 className="w-4 h-4 animate-spin" /> Ingresando...</>
+                ) : 'Ingresar al sistema'}
+              </button>
+            </form>
+          </div>
+
+          <p className="text-center text-white/25 text-xs mt-6 lg:hidden">
+            © {new Date().getFullYear()} SISMAC
+          </p>
+        </div>
       </div>
     </div>
   )

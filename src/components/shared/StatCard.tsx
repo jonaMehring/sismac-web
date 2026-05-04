@@ -22,30 +22,38 @@ export function StatCard({
     <div
       onClick={onClick}
       className={cn(
-        'bg-white rounded-xl border border-slate-200 p-5 flex flex-col gap-3',
-        onClick && 'cursor-pointer hover:shadow-md transition-shadow',
-        alert && 'border-red-200 bg-red-50/30',
+        'bg-white rounded-2xl p-5 flex flex-col gap-4 transition-all duration-200',
+        'border border-slate-100',
+        onClick && 'cursor-pointer hover:-translate-y-0.5',
+        alert ? 'border-red-200 bg-gradient-to-br from-red-50 to-white' : '',
         className
       )}
+      style={{ boxShadow: 'var(--shadow-card)' }}
     >
       <div className="flex items-start justify-between">
-        <p className="text-sm font-medium text-slate-500">{title}</p>
+        <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide leading-none">{title}</p>
         {Icon && (
-          <div className={cn('w-9 h-9 rounded-lg flex items-center justify-center shrink-0', iconColor)}>
-            <Icon className="w-4 h-4" />
+          <div className={cn('w-10 h-10 rounded-xl flex items-center justify-center shrink-0', iconColor)}>
+            <Icon className="w-5 h-5" />
           </div>
         )}
       </div>
       <div>
-        <p className={cn('text-2xl font-bold', alert ? 'text-red-700' : 'text-slate-900')}>
+        <p className={cn(
+          'text-3xl font-bold tracking-tight leading-none',
+          alert ? 'text-red-600' : 'text-slate-900'
+        )}>
           {value}
         </p>
         {subtitle && (
-          <p className="text-xs text-slate-500 mt-0.5">{subtitle}</p>
+          <p className={cn('text-xs mt-1.5 font-medium', alert ? 'text-red-400' : 'text-slate-400')}>
+            {subtitle}
+          </p>
         )}
       </div>
       {trend && (
-        <p className={cn('text-xs font-medium', trend.positive ? 'text-green-600' : 'text-red-500')}>
+        <p className={cn('text-xs font-semibold flex items-center gap-1', trend.positive ? 'text-emerald-600' : 'text-red-500')}>
+          <span>{trend.positive ? '↑' : '↓'}</span>
           {trend.value}
         </p>
       )}
