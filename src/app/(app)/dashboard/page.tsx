@@ -15,7 +15,7 @@ export default async function DashboardPage() {
   if (!user) redirect('/login')
 
   const { data: perfil } = await supabase.from('usuarios').select('rol').eq('id', user.id).single()
-  if (!perfil) redirect('/login')
+  if (!perfil) redirect('/api/auth/signout')
 
   // Cargar datos según rol
   const [
