@@ -28,7 +28,7 @@ export function Topbar({ user, onMenuToggle }: TopbarProps) {
 
   async function handleSignOut() {
     await supabase.auth.signOut()
-    router.push('/login')
+    window.location.href = '/login'
   }
 
   const initials = user.nombre

@@ -1,7 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Eye, EyeOff, Loader2, AlertCircle, FlaskConical } from 'lucide-react'
 
@@ -13,15 +12,6 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const router = useRouter()
-
-  // Clear any stale session on login page load to prevent redirect loops
-  useEffect(() => {
-    if (!IS_DEMO) {
-      const supabase = createClient()
-      supabase.auth.signOut().catch(() => {})
-    }
-  }, [])
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -29,8 +19,7 @@ export default function LoginPage() {
     setError('')
 
     if (IS_DEMO) {
-      router.push('/dashboard')
-      router.refresh()
+      window.location.href = '/dashboard'
       return
     }
 
@@ -43,8 +32,8 @@ export default function LoginPage() {
       return
     }
 
-    router.push('/dashboard')
-    router.refresh()
+    // Full page reload ensures the server picks up the new session cookies
+    window.location.href = '/dashboard'
   }
 
   return (
