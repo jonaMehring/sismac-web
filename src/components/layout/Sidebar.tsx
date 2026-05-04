@@ -156,34 +156,36 @@ function NavItemComponent({
   if (hasChildren) {
     return (
       <li>
-        <div className={cn(
-          'flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium cursor-default',
-          isActive ? 'bg-slate-700 text-white' : 'text-slate-400'
-        )}>
+        <Link
+          href={item.href}
+          onClick={onNavigate}
+          className={cn(
+            'flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors',
+            isActive ? 'bg-slate-700 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white'
+          )}
+        >
           <Icon className="w-4 h-4 shrink-0" />
           <span className="flex-1">{item.label}</span>
           <ChevronRight className={cn('w-3 h-3 transition-transform', isActive && 'rotate-90')} />
-        </div>
-        {isActive && (
-          <ul className="mt-1 ml-4 space-y-1 border-l border-slate-700 pl-3">
-            {item.children!.map(child => (
-              <li key={child.href}>
-                <Link
-                  href={child.href}
-                  onClick={onNavigate}
-                  className={cn(
-                    'flex items-center px-2 py-1.5 rounded-md text-sm transition-colors',
-                    pathname === child.href
-                      ? 'text-white font-medium'
-                      : 'text-slate-400 hover:text-slate-200'
-                  )}
-                >
-                  {child.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        )}
+        </Link>
+        <ul className="mt-1 ml-4 space-y-1 border-l border-slate-700 pl-3">
+          {item.children!.map(child => (
+            <li key={child.href}>
+              <Link
+                href={child.href}
+                onClick={onNavigate}
+                className={cn(
+                  'flex items-center px-2 py-1.5 rounded-md text-sm transition-colors',
+                  pathname === child.href
+                    ? 'text-white font-medium'
+                    : 'text-slate-400 hover:text-slate-200'
+                )}
+              >
+                {child.label}
+              </Link>
+            </li>
+          ))}
+        </ul>
       </li>
     )
   }
