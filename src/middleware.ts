@@ -34,11 +34,9 @@ export async function middleware(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser()
   const pathname = request.nextUrl.pathname
 
-  // Rutas públicas
+  // Rutas públicas — no redirigir desde /login aunque haya sesión activa
+  // (la página de login hace signOut al cargar para evitar loops)
   if (PUBLIC_ROUTES.some(r => pathname.startsWith(r))) {
-    if (user && pathname === '/login') {
-      return NextResponse.redirect(new URL('/dashboard', request.url))
-    }
     return supabaseResponse
   }
 
