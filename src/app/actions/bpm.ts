@@ -106,6 +106,25 @@ export async function createProcess(formData: unknown) {
   return data
 }
 
+export async function createTemplate(formData: unknown) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error('No autenticado')
+
+  const parsed = createTemplateSchema.safeParse(formData)
+  if (!parsed.success) throw new Error(parsed.error.issues[0].message)
+
+  const { error, data } = await supabase
+    .from('process_templates')
+    .insert({ ...parsed.data, creado_por: user.id })
+    .select()
+    .single()
+
+  if (error) throw new Error(error.message)
+  revalidatePath('/bpm/plantillas')
+  return data
+}
+
 export async function reorderTasks(tasks: { id: string; orden: number }[]) {
   const supabase = await createClient()
   const updates = tasks.map(t =>
