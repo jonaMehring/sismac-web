@@ -2,7 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
-import { createTaskSchema, updateTaskSchema, addCommentSchema, createProcessSchema } from '@/lib/validations/bpm'
+import { createTaskSchema, updateTaskSchema, addCommentSchema, createProcessSchema, createTemplateSchema } from '@/lib/validations/bpm'
 import type { TaskStatus } from '@/lib/types'
 
 export async function createTask(formData: unknown) {
