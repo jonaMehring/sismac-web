@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
 import { StatCard } from '@/components/shared/StatCard'
 import { AlertBanner } from '@/components/shared/AlertBanner'
@@ -14,7 +15,8 @@ export default async function DashboardPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const { data: perfil } = await supabase.from('usuarios').select('rol').eq('id', user.id).single()
+  const admin = createAdminClient()
+  const { data: perfil } = await admin.from('usuarios').select('rol').eq('id', user.id).single()
   if (!perfil) redirect('/api/auth/signout')
 
   // Cargar datos según rol

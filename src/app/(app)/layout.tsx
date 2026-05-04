@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { AppShell } from './AppShell'
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
@@ -8,14 +9,15 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
   if (!user) redirect('/login')
 
-  const { data: perfil, error: perfilError } = await supabase
+  // Use service-role client to bypass RLS — the user is already authenticated above
+  const admin = createAdminClient()
+  const { data: perfil } = await admin
     .from('usuarios')
     .select('*')
     .eq('id', user.id)
     .single()
 
-  if (!perfil || perfilError) {
-    // Redirect to route handler that clears cookies — can't set cookies from Server Component
+  if (!perfil) {
     redirect('/api/auth/signout')
   }
 
