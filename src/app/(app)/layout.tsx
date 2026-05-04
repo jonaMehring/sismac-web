@@ -15,9 +15,8 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     .single()
 
   if (!perfil || perfilError) {
-    // Sign out so middleware doesn't redirect back here in a loop
-    await supabase.auth.signOut()
-    redirect('/login')
+    // Redirect to route handler that clears cookies — can't set cookies from Server Component
+    redirect('/api/auth/signout')
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
