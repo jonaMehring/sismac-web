@@ -82,6 +82,20 @@ export interface Equipo {
   updated_at: string
 }
 
+export interface ClienteContacto {
+  id: string
+  cliente_id: string
+  nombre: string
+  cargo?: string | null
+  email?: string | null
+  telefono?: string | null
+  es_principal: boolean
+  notas?: string | null
+  activo: boolean
+  created_at: string
+  updated_at: string
+}
+
 // ============================================================
 // BPM
 // ============================================================

@@ -1,87 +1,100 @@
 import { createClient } from '@/lib/supabase/server'
 import { PageHeader } from '@/components/shared/PageHeader'
-import { EmptyState } from '@/components/shared/EmptyState'
-import { Building2, Plus, Phone, Mail } from 'lucide-react'
+import { Building2, Plus } from 'lucide-react'
 import Link from 'next/link'
-import { cn } from '@/lib/utils/cn'
+import { ClientesListView, type ClienteWithStats } from '@/components/clientes/ClientesListView'
 import type { Cliente } from '@/lib/types'
 
 export default async function ClientesPage() {
   const supabase = await createClient()
-  const { data: clientes } = await supabase
-    .from('clientes')
-    .select('*')
-    .eq('activo', true)
-    .order('nombre')
+
+  const [
+    { data: clientes },
+    { data: sectores },
+    { data: equipos },
+    { data: docs },
+    { data: tareas },
+  ] = await Promise.all([
+    supabase.from('clientes').select('*').order('nombre'),
+    supabase.from('sectores').select('id, cliente_id').eq('activo', true),
+    supabase.from('equipos').select('id, sector_id'),
+    supabase.from('client_documents').select('cliente_id, estado').neq('estado', 'renovado'),
+    supabase.from('tasks').select('cliente_id').in('estado', ['pendiente', 'en_curso', 'demorada']),
+  ])
+
+  // Build maps for efficient lookup
+  const sectorsByCliente = new Map<string, string[]>()
+  for (const s of sectores ?? []) {
+    const arr = sectorsByCliente.get(s.cliente_id) ?? []
+    arr.push(s.id)
+    sectorsByCliente.set(s.cliente_id, arr)
+  }
+
+  const equiposBySector = new Map<string, number>()
+  for (const e of equipos ?? []) {
+    equiposBySector.set(e.sector_id, (equiposBySector.get(e.sector_id) ?? 0) + 1)
+  }
+
+  const complianceByCliente = new Map<string, 'ok' | 'warning' | 'danger'>()
+  for (const d of docs ?? []) {
+    const cur = complianceByCliente.get(d.cliente_id)
+    if (d.estado === 'vencido') complianceByCliente.set(d.cliente_id, 'danger')
+    else if (d.estado === 'por_vencer' && cur !== 'danger') complianceByCliente.set(d.cliente_id, 'warning')
+    else if (!cur) complianceByCliente.set(d.cliente_id, 'ok')
+  }
+
+  const tareasByCliente = new Map<string, number>()
+  for (const t of tareas ?? []) {
+    if (t.cliente_id) tareasByCliente.set(t.cliente_id, (tareasByCliente.get(t.cliente_id) ?? 0) + 1)
+  }
+
+  const clientesWithStats: ClienteWithStats[] = (clientes as unknown as Cliente[] ?? []).map(c => {
+    const mis_sectores = sectorsByCliente.get(c.id) ?? []
+    const mis_equipos = mis_sectores.reduce((acc, sid) => acc + (equiposBySector.get(sid) ?? 0), 0)
+    return {
+      ...c,
+      sectoresCount: mis_sectores.length,
+      equiposCount: mis_equipos,
+      tareasCount: tareasByCliente.get(c.id) ?? 0,
+      compliance: complianceByCliente.get(c.id) ?? 'none',
+    }
+  })
+
+  const totalActivos = clientesWithStats.filter(c => c.activo).length
+  const conAlertas = clientesWithStats.filter(c => c.compliance === 'warning' || c.compliance === 'danger').length
+  const conVencidos = clientesWithStats.filter(c => c.compliance === 'danger').length
 
   return (
     <div>
       <PageHeader
         title="Clientes"
-        description="Gestión de clientes y sus datos"
+        description="Gestión y seguimiento de clientes industriales"
         icon={Building2}
-        iconColor="bg-indigo-600"
+        iconColor="bg-cyan-600"
         actions={
-          <Link href="/clientes/nuevo" className="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-3 py-2 rounded-lg">
-            <Plus className="w-4 h-4" />
-            Nuevo cliente
+          <Link href="/clientes/nuevo"
+            className="flex items-center gap-1.5 bg-gradient-to-r from-slate-800 to-slate-900 hover:from-slate-700 hover:to-slate-800 text-white text-sm font-semibold px-4 py-2 rounded-xl shadow-sm transition-all">
+            <Plus className="w-4 h-4" /> Nuevo cliente
           </Link>
         }
       />
 
-      {(clientes ?? []).length === 0 ? (
-        <EmptyState
-          icon={Building2}
-          title="Sin clientes"
-          description="Crea el primer cliente para comenzar"
-          action={
-            <Link href="/clientes/nuevo" className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium">
-              Nuevo cliente
-            </Link>
-          }
-        />
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-          {(clientes as unknown as Cliente[]).map(c => (
-            <Link
-              key={c.id}
-              href={`/clientes/${c.id}`}
-              className="bg-white rounded-xl border border-slate-200 p-5 hover:shadow-md hover:border-indigo-200 transition-all"
-            >
-              <div className="flex items-start gap-3">
-                <div className="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-600 font-bold text-sm flex items-center justify-center shrink-0">
-                  {c.nombre.charAt(0).toUpperCase()}
-                </div>
-                <div className="min-w-0">
-                  <h3 className="font-semibold text-slate-800 truncate">{c.nombre}</h3>
-                  {c.razon_social && <p className="text-xs text-slate-400 truncate">{c.razon_social}</p>}
-                  {c.cuit && <p className="text-xs text-slate-400">CUIT: {c.cuit}</p>}
-                </div>
-              </div>
-              <div className="mt-3 space-y-1">
-                {c.email && (
-                  <div className="flex items-center gap-1.5 text-xs text-slate-500">
-                    <Mail className="w-3.5 h-3.5" />
-                    <span className="truncate">{c.email}</span>
-                  </div>
-                )}
-                {c.telefono && (
-                  <div className="flex items-center gap-1.5 text-xs text-slate-500">
-                    <Phone className="w-3.5 h-3.5" />
-                    <span>{c.telefono}</span>
-                  </div>
-                )}
-              </div>
-              <div className={cn(
-                'mt-3 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium',
-                c.activo ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'
-              )}>
-                {c.activo ? 'Activo' : 'Inactivo'}
-              </div>
-            </Link>
-          ))}
-        </div>
-      )}
+      {/* Stats bar */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+        {[
+          { label: 'Total',        value: clientesWithStats.length, cls: 'text-slate-700' },
+          { label: 'Activos',      value: totalActivos,             cls: 'text-emerald-600' },
+          { label: 'Con alertas',  value: conAlertas,               cls: conAlertas > 0 ? 'text-amber-600' : 'text-slate-700' },
+          { label: 'Docs vencidos',value: conVencidos,              cls: conVencidos > 0 ? 'text-red-600' : 'text-slate-700' },
+        ].map(s => (
+          <div key={s.label} className="bg-white rounded-2xl border border-slate-100 px-4 py-3" style={{ boxShadow: 'var(--shadow-card)' }}>
+            <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide">{s.label}</p>
+            <p className={`text-2xl font-bold mt-0.5 ${s.cls}`}>{s.value}</p>
+          </div>
+        ))}
+      </div>
+
+      <ClientesListView clientes={clientesWithStats} />
     </div>
   )
 }
