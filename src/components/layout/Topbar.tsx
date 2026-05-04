@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { Menu, LogOut, User, ChevronDown } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { NotificationBell } from './NotificationBell'
@@ -23,7 +22,6 @@ interface TopbarProps {
 
 export function Topbar({ user, onMenuToggle }: TopbarProps) {
   const [dropdownOpen, setDropdownOpen] = useState(false)
-  const router = useRouter()
   const supabase = createClient()
 
   async function handleSignOut() {
