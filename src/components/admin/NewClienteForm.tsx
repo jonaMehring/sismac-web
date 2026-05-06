@@ -30,7 +30,7 @@ export function NewClienteForm() {
     startTransition(async () => {
       try {
         const cliente = await createCliente(data)
-        router.push(`/clientes/${cliente.id}`)
+        window.location.href = `/clientes/${cliente.id}`
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Error al crear el cliente')
       }

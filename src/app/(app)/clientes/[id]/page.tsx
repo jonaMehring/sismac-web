@@ -46,14 +46,7 @@ export default async function ClienteDetailPage({
   const { data: cliente } = await supabase.from('clientes').select('*').eq('id', id).single()
   if (!cliente) notFound()
 
-  const [
-    { data: sectoresRaw },
-    { data: documentos },
-    { data: servicios },
-    { data: presupuestos },
-    { data: tareas },
-    { data: contactos },
-  ] = await Promise.all([
+  const results = await Promise.allSettled([
     supabase.from('sectores')
       .select('*, equipos(*)')
       .eq('cliente_id', id)
@@ -84,6 +77,13 @@ export default async function ClienteDetailPage({
       .eq('activo', true)
       .order('es_principal', { ascending: false }),
   ])
+
+  const sectoresRaw  = results[0].status === 'fulfilled' ? results[0].value.data : null
+  const documentos   = results[1].status === 'fulfilled' ? results[1].value.data : null
+  const servicios    = results[2].status === 'fulfilled' ? results[2].value.data : null
+  const presupuestos = results[3].status === 'fulfilled' ? results[3].value.data : null
+  const tareas       = results[4].status === 'fulfilled' ? results[4].value.data : null
+  const contactos    = results[5].status === 'fulfilled' ? results[5].value.data : null
 
   type SectorWithEquipos = Sector & { equipos: Equipo[] }
   const sectores = (sectoresRaw ?? []) as unknown as SectorWithEquipos[]

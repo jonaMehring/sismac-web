@@ -8,19 +8,19 @@ import type { Cliente } from '@/lib/types'
 export default async function ClientesPage() {
   const supabase = await createClient()
 
-  const [
-    { data: clientes },
-    { data: sectores },
-    { data: equipos },
-    { data: docs },
-    { data: tareas },
-  ] = await Promise.all([
+  const results = await Promise.allSettled([
     supabase.from('clientes').select('*').order('nombre'),
     supabase.from('sectores').select('id, cliente_id').eq('activo', true),
     supabase.from('equipos').select('id, sector_id'),
     supabase.from('client_documents').select('cliente_id, estado').neq('estado', 'renovado'),
     supabase.from('tasks').select('cliente_id').in('estado', ['pendiente', 'en_curso', 'demorada']),
   ])
+
+  const clientes = results[0].status === 'fulfilled' ? results[0].value.data : null
+  const sectores  = results[1].status === 'fulfilled' ? results[1].value.data : null
+  const equipos   = results[2].status === 'fulfilled' ? results[2].value.data : null
+  const docs      = results[3].status === 'fulfilled' ? results[3].value.data : null
+  const tareas    = results[4].status === 'fulfilled' ? results[4].value.data : null
 
   // Build maps for efficient lookup
   const sectorsByCliente = new Map<string, string[]>()
