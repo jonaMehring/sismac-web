@@ -18,7 +18,7 @@ const CATEGORIA_COLOR: Record<string, string> = {
   mantenimiento: 'bg-orange-100 text-orange-700',
   administrativo: 'bg-blue-100 text-blue-700',
   compliance: 'bg-green-100 text-green-700',
-  ventas: 'bg-purple-100 text-purple-700',
+  ventas: 'bg-blue-100 text-blue-700',
   otro: 'bg-slate-100 text-slate-600',
 }
 
@@ -48,9 +48,9 @@ export default async function PlantillasPage() {
         title="Plantillas"
         description="Modelos de procesos reutilizables"
         icon={LayoutTemplate}
-        iconColor="bg-purple-600"
+        iconColor="bg-blue-600"
         actions={
-          <Link href="/bpm/plantillas/nueva" className="flex items-center gap-1.5 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium px-3 py-2 rounded-lg transition-colors">
+          <Link href="/bpm/plantillas/nueva" className="flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-3 py-2 rounded-lg transition-colors">
             <Plus className="w-4 h-4" />
             Nueva plantilla
           </Link>
@@ -63,7 +63,7 @@ export default async function PlantillasPage() {
           title="Sin plantillas"
           description="Crea plantillas para estandarizar tus procesos operativos"
           action={
-            <Link href="/bpm/plantillas/nueva" className="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-700">
+            <Link href="/bpm/plantillas/nueva" className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700">
               Nueva plantilla
             </Link>
           }
@@ -73,8 +73,8 @@ export default async function PlantillasPage() {
           {(templates as unknown as ProcessTemplate[]).map(t => (
             <div key={t.id} className={cn('bg-white rounded-xl border p-5 flex flex-col gap-3', t.activo ? 'border-slate-200' : 'border-slate-100 opacity-60')}>
               <div className="flex items-start justify-between gap-2">
-                <div className="w-9 h-9 rounded-lg bg-purple-100 flex items-center justify-center shrink-0">
-                  <LayoutTemplate className="w-4 h-4 text-purple-600" />
+                <div className="w-9 h-9 rounded-lg bg-blue-100 flex items-center justify-center shrink-0">
+                  <LayoutTemplate className="w-4 h-4 text-blue-600" />
                 </div>
                 <div className="flex items-center gap-1">
                   {t.activo

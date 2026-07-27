@@ -9,7 +9,7 @@ export function AppShell({ user, children }: { user: Usuario; children: React.Re
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
-    <div className="flex h-screen overflow-hidden" style={{ background: 'var(--bg)' }}>
+    <div className="flex h-screen overflow-hidden" style={{ background: 'transparent' }}>
       <Sidebar
         userRole={user.rol}
         open={sidebarOpen}

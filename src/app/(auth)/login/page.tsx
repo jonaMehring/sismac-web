@@ -1,9 +1,12 @@
 'use client'
 
 import { useState } from 'react'
-import Image from 'next/image'
 import { createClient } from '@/lib/supabase/client'
-import { Eye, EyeOff, Loader2, AlertCircle } from 'lucide-react'
+import { Logo, LogoMark } from '@/components/brand/Logo'
+import { Eye, EyeOff, Loader2, AlertCircle, ShieldCheck, Activity, Layers, Lock } from 'lucide-react'
+
+const DEMO_EMAIL = 'admin@gmail.com'
+const DEMO_PASSWORD = 'admin123'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -17,6 +20,13 @@ export default function LoginPage() {
     setLoading(true)
     setError('')
 
+    // Validación de credenciales de la muestra
+    if (email.trim().toLowerCase() !== DEMO_EMAIL || password !== DEMO_PASSWORD) {
+      setError('Email o contraseña incorrectos')
+      setLoading(false)
+      return
+    }
+
     const supabase = createClient()
     const { error } = await supabase.auth.signInWithPassword({ email, password })
 
@@ -29,66 +39,79 @@ export default function LoginPage() {
     window.location.href = '/dashboard'
   }
 
-  return (
-    <div className="min-h-screen flex" style={{ background: 'linear-gradient(135deg, #0C1A47 0%, #0f2060 50%, #0C1A47 100%)' }}>
+  function fillDemo() {
+    setEmail(DEMO_EMAIL)
+    setPassword(DEMO_PASSWORD)
+    setError('')
+  }
 
-      {/* Left panel — branding */}
-      <div className="hidden lg:flex flex-col justify-between w-[45%] px-14 py-12"
+  return (
+    <div className="min-h-screen flex brand-surface">
+
+      {/* Panel izquierdo — branding */}
+      <div className="hidden lg:flex flex-col justify-between w-[46%] px-14 py-12 relative overflow-hidden"
         style={{ borderRight: '1px solid rgba(255,255,255,0.07)' }}>
-        <div>
-          <Image
-            src="/logo-sismac.png"
-            alt="SISMAC"
-            width={160}
-            height={65}
-            className="object-contain"
-            priority
-          />
+
+        {/* Grid decorativo */}
+        <div className="absolute inset-0 opacity-[0.07] pointer-events-none"
+          style={{
+            backgroundImage: 'linear-gradient(rgba(255,255,255,0.6) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.6) 1px, transparent 1px)',
+            backgroundSize: '44px 44px',
+          }} />
+        <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full pointer-events-none"
+          style={{ background: 'radial-gradient(circle, rgba(56,189,248,0.22), transparent 70%)' }} />
+
+        <div className="relative">
+          <Logo variant="light" markSize={42} showTagline />
         </div>
-        <div>
-          <h1 className="text-4xl font-bold text-white leading-tight mb-4">
+
+        <div className="relative">
+          <h1 className="text-[2.6rem] font-bold text-white leading-[1.1] mb-4 tracking-tight">
             Gestión integral<br />
-            <span style={{ color: '#06B6D4' }}>sin límites.</span>
+            <span className="gradient-text">para tu ingeniería.</span>
           </h1>
-          <p className="text-white/50 text-base leading-relaxed max-w-sm">
-            Operaciones, finanzas y compliance en una sola plataforma diseñada para tu empresa.
+          <p className="text-white/55 text-base leading-relaxed max-w-md">
+            Operaciones, finanzas y compliance en una sola plataforma, con trazabilidad total y control en tiempo real.
           </p>
-          <div className="flex gap-6 mt-10">
+
+          <div className="grid grid-cols-3 gap-3 mt-10 max-w-md">
             {[
-              { label: 'Módulos integrados', value: '4+' },
-              { label: 'Tiempo real', value: '100%' },
-              { label: 'Seguro', value: 'RLS' },
+              { icon: Layers, label: 'Módulos integrados', value: '5' },
+              { icon: Activity, label: 'Tiempo real', value: '100%' },
+              { icon: ShieldCheck, label: 'Auditoría', value: 'RLS' },
             ].map(s => (
-              <div key={s.label}>
-                <p className="text-2xl font-bold text-white">{s.value}</p>
-                <p className="text-xs text-white/40 mt-0.5">{s.label}</p>
+              <div key={s.label} className="rounded-2xl px-4 py-4 border border-white/10 bg-white/[0.04]">
+                <s.icon className="w-4 h-4 text-[#38BDF8] mb-2.5" />
+                <p className="text-xl font-bold text-white leading-none">{s.value}</p>
+                <p className="text-[0.68rem] text-white/45 mt-1.5 leading-tight">{s.label}</p>
               </div>
             ))}
           </div>
         </div>
-        <p className="text-white/20 text-xs">© {new Date().getFullYear()} SISMAC. Todos los derechos reservados.</p>
+
+        <p className="relative text-white/25 text-xs">© {new Date().getFullYear()} Ingesar. Todos los derechos reservados.</p>
       </div>
 
-      {/* Right panel — form */}
+      {/* Panel derecho — formulario */}
       <div className="flex-1 flex items-center justify-center px-6 py-12">
-        <div className="w-full max-w-[400px]">
+        <div className="w-full max-w-[410px]">
 
-          {/* Mobile logo */}
+          {/* Logo mobile */}
           <div className="lg:hidden flex justify-center mb-8">
-            <div className="bg-white rounded-2xl px-4 py-2 shadow-lg">
-              <Image src="/logo-sismac.png" alt="SISMAC" width={120} height={50} className="object-contain" priority />
-            </div>
+            <Logo variant="light" markSize={40} />
           </div>
 
-          {/* Card */}
-          <div className="bg-white rounded-3xl p-8 shadow-2xl" style={{ boxShadow: '0 24px 64px rgba(0,0,0,0.3)' }}>
+          <div className="bg-white rounded-[26px] p-8 sm:p-9" style={{ boxShadow: '0 30px 70px rgba(0,0,0,0.35)' }}>
             <div className="mb-7">
-              <h2 className="text-2xl font-bold text-slate-900">Bienvenido</h2>
+              <div className="w-11 h-11 rounded-2xl flex items-center justify-center mb-4 lg:hidden">
+                <LogoMark size={44} />
+              </div>
+              <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Bienvenido de nuevo</h2>
               <p className="text-sm text-slate-400 mt-1">Ingresá tus credenciales para continuar</p>
             </div>
 
             {error && (
-              <div className="flex items-center gap-2.5 bg-red-50 text-red-700 rounded-xl px-4 py-3 mb-5 text-sm border border-red-100">
+              <div className="flex items-center gap-2.5 bg-red-50 text-red-700 rounded-xl px-4 py-3 mb-5 text-sm border border-red-100 animate-slide-up">
                 <AlertCircle className="w-4 h-4 shrink-0" />
                 {error}
               </div>
@@ -107,8 +130,8 @@ export default function LoginPage() {
                   autoComplete="email"
                   autoFocus
                   placeholder="usuario@empresa.com"
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:border-transparent text-sm transition-all"
-                  style={{ '--tw-ring-color': '#06B6D4' } as React.CSSProperties}
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50/70 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:bg-white focus:border-transparent text-sm transition-all"
+                  style={{ '--tw-ring-color': '#2563EB' } as React.CSSProperties}
                 />
               </div>
 
@@ -124,13 +147,14 @@ export default function LoginPage() {
                     required
                     autoComplete="current-password"
                     placeholder="••••••••"
-                    className="w-full px-4 py-3 pr-12 rounded-xl border border-slate-200 bg-slate-50 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:border-transparent text-sm transition-all"
-                    style={{ '--tw-ring-color': '#06B6D4' } as React.CSSProperties}
+                    className="w-full px-4 py-3 pr-12 rounded-xl border border-slate-200 bg-slate-50/70 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:bg-white focus:border-transparent text-sm transition-all"
+                    style={{ '--tw-ring-color': '#2563EB' } as React.CSSProperties}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5"
+                    aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -140,18 +164,32 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full flex items-center justify-center gap-2 text-white font-semibold py-3.5 rounded-xl transition-all mt-2 disabled:opacity-70"
-                style={{ background: loading ? '#94a3b8' : 'linear-gradient(135deg, #0C1A47, #1e3a8a)', boxShadow: loading ? 'none' : '0 4px 14px rgba(13,27,75,0.4)' }}
+                className="btn-brand w-full flex items-center justify-center gap-2 font-semibold py-3.5 rounded-xl mt-2 disabled:opacity-70"
               >
                 {loading ? (
                   <><Loader2 className="w-4 h-4 animate-spin" /> Ingresando...</>
                 ) : 'Ingresar al sistema'}
               </button>
             </form>
+
+            {/* Acceso de demostración */}
+            <button
+              onClick={fillDemo}
+              type="button"
+              className="w-full mt-4 flex items-center gap-3 rounded-xl border border-dashed border-slate-200 bg-slate-50/60 px-4 py-3 text-left hover:border-blue-300 hover:bg-blue-50/40 transition-colors group"
+            >
+              <span className="w-8 h-8 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                <Lock className="w-4 h-4" />
+              </span>
+              <span className="min-w-0">
+                <span className="block text-xs font-semibold text-slate-700">Acceso de demostración</span>
+                <span className="block text-xs text-slate-400 truncate">admin@gmail.com · admin123 — tocá para autocompletar</span>
+              </span>
+            </button>
           </div>
 
-          <p className="text-center text-white/25 text-xs mt-6 lg:hidden">
-            © {new Date().getFullYear()} SISMAC
+          <p className="text-center text-white/30 text-xs mt-6">
+            © {new Date().getFullYear()} Ingesar · Sistema de Gestión Integral
           </p>
         </div>
       </div>

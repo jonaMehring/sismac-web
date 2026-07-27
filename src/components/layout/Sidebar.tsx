@@ -1,13 +1,13 @@
 'use client'
 
 import Link from 'next/link'
-import Image from 'next/image'
 import { usePathname } from 'next/navigation'
+import { Logo } from '@/components/brand/Logo'
 import { cn } from '@/lib/utils/cn'
 import type { UserRole } from '@/lib/types'
 import {
   LayoutDashboard, CheckSquare, DollarSign, Shield,
-  Users, BarChart3, Settings, ChevronRight, Building2, X
+  Users, BarChart3, Settings, ChevronRight, Building2, X, ClipboardCheck
 } from 'lucide-react'
 
 interface NavItem {
@@ -37,6 +37,18 @@ const NAV_ITEMS: NavItem[] = [
       { href: '/bpm/tareas', label: 'Mis Tareas' },
       { href: '/bpm/procesos', label: 'Procesos' },
       { href: '/bpm/plantillas', label: 'Plantillas' },
+    ],
+  },
+  {
+    href: '/inspecciones',
+    label: 'Inspecciones',
+    icon: ClipboardCheck,
+    accent: 'text-cyan-400',
+    roles: ['admin_sismac', 'supervisor_bpm', 'operario'],
+    children: [
+      { href: '/inspecciones', label: 'Panel' },
+      { href: '/inspecciones/nueva', label: 'Nueva inspección' },
+      { href: '/inspecciones/equipos/nuevo', label: 'Registrar equipo' },
     ],
   },
   {
@@ -116,21 +128,15 @@ export function Sidebar({ userRole, open, onClose }: SidebarProps) {
         'lg:relative lg:translate-x-0 lg:z-auto',
         open ? 'translate-x-0' : '-translate-x-full',
       )}
-        style={{ width: 260, background: 'var(--sidebar-bg)' }}
+        style={{
+          width: 264,
+          background: 'linear-gradient(180deg, var(--sidebar-bg-2) 0%, var(--sidebar-bg) 100%)',
+        }}
       >
         {/* Header — logo */}
-        <div className="flex items-center justify-between px-4 py-4 border-b border-white/8 shrink-0" style={{ minHeight: 68 }}>
-          <Link href="/dashboard" className="flex items-center gap-2.5 group" onClick={onClose}>
-            <div className="bg-white rounded-xl p-1 shadow-md group-hover:shadow-lg transition-shadow">
-              <Image
-                src="/logo-sismac.png"
-                alt="SISMAC"
-                width={88}
-                height={36}
-                className="object-contain"
-                priority
-              />
-            </div>
+        <div className="flex items-center justify-between px-5 py-4 border-b border-white/8 shrink-0" style={{ minHeight: 68 }}>
+          <Link href="/dashboard" className="flex items-center group" onClick={onClose}>
+            <Logo variant="light" markSize={32} />
           </Link>
           <button
             onClick={onClose}
@@ -156,9 +162,12 @@ export function Sidebar({ userRole, open, onClose }: SidebarProps) {
 
         {/* Footer */}
         <div className="px-4 py-4 border-t border-white/8 shrink-0">
-          <p className="text-xs text-white/25 text-center font-medium tracking-wide">
-            SISMAC · v1.0
-          </p>
+          <div className="flex items-center justify-center gap-2 text-white/30">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]" style={{ animation: 'pulse-dot 2s ease infinite' }} />
+            <p className="text-xs text-center font-medium tracking-wide">
+              Ingesar · v1.0
+            </p>
+          </div>
         </div>
       </aside>
     </>

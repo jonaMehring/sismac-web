@@ -10,9 +10,9 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: 'SISMAC — Sistema de Gestión',
-  description: 'Plataforma integral de gestión operativa, financiera y de compliance.',
-  icons: { icon: '/logo-sismac.png' },
+  title: 'Ingesar — Sistema de Gestión Integral',
+  description: 'Plataforma integral de gestión operativa, financiera y de compliance para empresas de ingeniería.',
+  icons: { icon: '/favicon.svg' },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

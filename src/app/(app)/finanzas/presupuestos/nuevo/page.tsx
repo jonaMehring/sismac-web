@@ -18,7 +18,7 @@ export default async function NuevoPresupuestoPage() {
         title="Nuevo presupuesto"
         description="Crea un presupuesto con líneas de servicio/producto"
         icon={ClipboardList}
-        iconColor="bg-purple-600"
+        iconColor="bg-blue-600"
       />
       <NewBudgetForm clientes={clientes ?? []} />
     </div>

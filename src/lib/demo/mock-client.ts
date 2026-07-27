@@ -1,5 +1,55 @@
 import { DEMO_DATA, DEMO_USER, DEMO_PERFIL } from './data'
 
+// Genera un registro simulado con id y timestamps
+function makeRow(data: unknown): Record<string, unknown> {
+  const now = new Date().toISOString()
+  const base = {
+    id: 'demo-' + Math.random().toString(36).slice(2, 10),
+    created_at: now,
+    updated_at: now,
+  }
+  return { ...base, ...(data && typeof data === 'object' ? (data as Record<string, unknown>) : {}) }
+}
+
+// Resultado de mutaciones (insert/update/delete/upsert): encadenable y "awaitable".
+// Soporta la cadena real de Supabase: .insert(x).select().single(), .update(x).eq(...), .delete().eq(...)
+class MockMutation {
+  private _rows: Record<string, unknown>[]
+
+  constructor(table: string, payload: unknown, persist = false) {
+    if (Array.isArray(payload)) {
+      this._rows = payload.map(makeRow)
+    } else if (payload === undefined) {
+      this._rows = []
+    } else {
+      this._rows = [makeRow(payload)]
+    }
+    // Persistir inserts en los datos demo (en memoria) para que aparezcan en las listas
+    if (persist && this._rows.length > 0) {
+      if (!DEMO_DATA[table]) DEMO_DATA[table] = []
+      ;(DEMO_DATA[table] as Record<string, unknown>[]).unshift(...this._rows)
+    }
+  }
+
+  // Filtros (para update/delete) — no-ops que devuelven la misma cadena
+  eq(): MockMutation { return this }
+  neq(): MockMutation { return this }
+  in(): MockMutation { return this }
+  is(): MockMutation { return this }
+  match(): MockMutation { return this }
+  select(): MockMutation { return this }
+
+  single() { return Promise.resolve({ data: this._rows[0] ?? makeRow({}), error: null }) }
+  maybeSingle() { return Promise.resolve({ data: this._rows[0] ?? null, error: null }) }
+
+  then(
+    resolve: (v: { data: Record<string, unknown>[]; error: null }) => unknown,
+    reject?: (e: unknown) => unknown
+  ) {
+    return Promise.resolve({ data: this._rows, error: null }).then(resolve as never, reject as never)
+  }
+}
+
 // Simula el query builder de Supabase con datos de demo
 class MockQueryBuilder {
   private _table: string
@@ -30,10 +80,10 @@ class MockQueryBuilder {
   neq(col: string, val: unknown): MockQueryBuilder { const q = this._clone(); q._filters.push(r => r[col] !== val); return q }
   in(col: string, vals: unknown[]): MockQueryBuilder { const q = this._clone(); q._filters.push(r => vals.includes(r[col])); return q }
   is(col: string, val: unknown): MockQueryBuilder { const q = this._clone(); q._filters.push(r => val === null ? r[col] == null : r[col] === val); return q }
-  gte(_col: string, _val: unknown): MockQueryBuilder { return this._clone() }
-  lte(_col: string, _val: unknown): MockQueryBuilder { return this._clone() }
-  gt(_col: string, _val: unknown): MockQueryBuilder { return this._clone() }
-  lt(_col: string, _val: unknown): MockQueryBuilder { return this._clone() }
+  gte(col: string, val: unknown): MockQueryBuilder { const q = this._clone(); q._filters.push(r => r[col] != null && (r[col] as never) >= (val as never)); return q }
+  lte(col: string, val: unknown): MockQueryBuilder { const q = this._clone(); q._filters.push(r => r[col] != null && (r[col] as never) <= (val as never)); return q }
+  gt(col: string, val: unknown): MockQueryBuilder { const q = this._clone(); q._filters.push(r => r[col] != null && (r[col] as never) > (val as never)); return q }
+  lt(col: string, val: unknown): MockQueryBuilder { const q = this._clone(); q._filters.push(r => r[col] != null && (r[col] as never) < (val as never)); return q }
   ilike(_col: string, _val: unknown): MockQueryBuilder { return this._clone() }
   order(col: string, opts?: { ascending?: boolean }): MockQueryBuilder {
     const q = this._clone()
@@ -44,10 +94,10 @@ class MockQueryBuilder {
   limit(n: number): MockQueryBuilder { const q = this._clone(); q._limit = n; return q }
   range(from: number, to: number): MockQueryBuilder { const q = this._clone(); q._rangeFrom = from; q._rangeTo = to; return q }
 
-  insert(_data: unknown) { return { select: () => this._single(DEMO_PERFIL) } }
-  update(_data: unknown) { return { eq: () => ({ error: null }) } }
-  delete() { return { eq: () => ({ error: null }) } }
-  upsert(_data: unknown) { return this._clone() }
+  insert(data: unknown) { return new MockMutation(this._table, data, true) }
+  update(data: unknown) { return new MockMutation(this._table, data) }
+  delete() { return new MockMutation(this._table, undefined) }
+  upsert(data: unknown) { return new MockMutation(this._table, data, true) }
 
   private _getResults(): unknown[] {
     const rows = (DEMO_DATA[this._table] ?? []) as Record<string, unknown>[]

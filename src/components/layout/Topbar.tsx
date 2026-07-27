@@ -58,10 +58,13 @@ export function Topbar({ user, onMenuToggle }: TopbarProps) {
         >
           <Menu className="w-5 h-5" />
         </button>
-        <div className="hidden lg:block">
+        <div className="hidden lg:flex items-center gap-2.5">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
           <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest">
-            {process.env.NEXT_PUBLIC_APP_NAME ?? 'SISMAC'}
+            {process.env.NEXT_PUBLIC_APP_NAME ?? 'Ingesar'}
           </p>
+          <span className="text-slate-200">·</span>
+          <p className="text-xs font-medium text-slate-400">Sistema de Gestión Integral</p>
         </div>
       </div>
 
@@ -80,7 +83,7 @@ export function Topbar({ user, onMenuToggle }: TopbarProps) {
           >
             {/* Avatar */}
             <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0"
-              style={{ background: 'linear-gradient(135deg, #1e3a8a, #06b6d4)' }}>
+              style={{ background: 'linear-gradient(135deg, #0A2540, #2563EB)' }}>
               {initials}
             </div>
             <div className="hidden sm:block text-left">
@@ -98,7 +101,7 @@ export function Topbar({ user, onMenuToggle }: TopbarProps) {
                 <div className="px-4 py-3 border-b border-slate-50">
                   <div className="flex items-center gap-2.5 mb-2">
                     <div className="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold shrink-0"
-                      style={{ background: 'linear-gradient(135deg, #1e3a8a, #06b6d4)' }}>
+                      style={{ background: 'linear-gradient(135deg, #0A2540, #2563EB)' }}>
                       {initials}
                     </div>
                     <div>

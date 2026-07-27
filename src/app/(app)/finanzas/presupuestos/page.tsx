@@ -23,9 +23,9 @@ export default async function PresupuestosPage() {
         title="Presupuestos"
         description="Creación y seguimiento de presupuestos"
         icon={ClipboardList}
-        iconColor="bg-purple-600"
+        iconColor="bg-blue-600"
         actions={
-          <Link href="/finanzas/presupuestos/nuevo" className="flex items-center gap-1.5 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium px-3 py-2 rounded-lg">
+          <Link href="/finanzas/presupuestos/nuevo" className="flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-3 py-2 rounded-lg">
             <Plus className="w-4 h-4" />
             Nuevo presupuesto
           </Link>
@@ -52,7 +52,7 @@ export default async function PresupuestosPage() {
               {(presupuestos as unknown as (Budget & { cliente?: { nombre: string } })[]).map(b => (
                 <tr key={b.id} className="hover:bg-slate-50">
                   <td className="px-4 py-3">
-                    <Link href={`/finanzas/presupuestos/${b.id}`} className="font-medium text-purple-600 hover:underline">
+                    <Link href={`/finanzas/presupuestos/${b.id}`} className="font-medium text-blue-600 hover:underline">
                       {b.numero}
                     </Link>
                     <p className="text-xs text-slate-500 line-clamp-1">{b.titulo}</p>

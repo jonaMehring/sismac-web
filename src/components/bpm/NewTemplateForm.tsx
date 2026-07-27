@@ -59,7 +59,7 @@ export function NewTemplateForm() {
       </div>
 
       <div className="flex gap-3 pt-2">
-        <button type="submit" disabled={isPending} className="flex-1 bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-white font-medium py-2.5 px-4 rounded-lg text-sm transition-colors">
+        <button type="submit" disabled={isPending} className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-medium py-2.5 px-4 rounded-lg text-sm transition-colors">
           {isPending ? 'Creando...' : 'Crear plantilla'}
         </button>
         <button type="button" onClick={() => router.back()} className="px-4 py-2.5 border border-slate-200 rounded-lg text-sm text-slate-600 hover:bg-slate-50 transition-colors">

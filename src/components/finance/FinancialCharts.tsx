@@ -64,9 +64,9 @@ export function FinancialCharts({ data, categorias }: Props) {
               contentStyle={{ fontSize: 12, borderRadius: 8, border: '1px solid #e2e8f0' }}
             />
             <Legend wrapperStyle={{ fontSize: 12 }} />
-            <Bar dataKey="gastos" name="Gastos" fill="#fca5a5" radius={[4, 4, 0, 0]} />
-            <Bar dataKey="facturado" name="Facturado" fill="#93c5fd" radius={[4, 4, 0, 0]} />
-            <Line dataKey="cobrado" name="Cobrado" stroke="#22c55e" strokeWidth={2} dot={{ r: 4, fill: '#22c55e' }} />
+            <Bar dataKey="gastos" name="Gastos" fill="#f87171" radius={[4, 4, 0, 0]} isAnimationActive={false} />
+            <Bar dataKey="facturado" name="Facturado" fill="#60a5fa" radius={[4, 4, 0, 0]} isAnimationActive={false} />
+            <Line dataKey="cobrado" name="Cobrado" stroke="#10b981" strokeWidth={2.5} dot={{ r: 4, fill: '#10b981' }} isAnimationActive={false} />
           </ComposedChart>
         </ResponsiveContainer>
       </div>
@@ -87,6 +87,7 @@ export function FinancialCharts({ data, categorias }: Props) {
                   outerRadius={90}
                   label={({ name, percent }) => `${name} ${((percent ?? 0) * 100).toFixed(0)}%`}
                   labelLine={false}
+                  isAnimationActive={false}
                 >
                   {categorias.map((cat, i) => (
                     <Cell key={i} fill={cat.color} />

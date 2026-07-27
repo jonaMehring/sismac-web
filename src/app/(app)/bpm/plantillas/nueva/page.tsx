@@ -9,7 +9,7 @@ export default function NuevaPlantillaPage() {
         title="Nueva plantilla"
         description="Define un modelo de proceso reutilizable"
         icon={LayoutTemplate}
-        iconColor="bg-purple-600"
+        iconColor="bg-blue-600"
       />
       <NewTemplateForm />
     </div>

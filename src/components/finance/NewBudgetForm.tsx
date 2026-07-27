@@ -93,7 +93,7 @@ export function NewBudgetForm({ clientes }: Props) {
             name="titulo"
             required
             autoFocus
-            className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-400"
+            className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400"
             placeholder="Ej: Mantenimiento preventivo planta industrial"
           />
         </div>
@@ -103,7 +103,7 @@ export function NewBudgetForm({ clientes }: Props) {
             <label className="block text-sm font-medium text-slate-700 mb-1.5">Cliente</label>
             <select
               name="cliente_id"
-              className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/20"
+              className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
             >
               <option value="">Sin cliente</option>
               {clientes.map(c => (
@@ -117,7 +117,7 @@ export function NewBudgetForm({ clientes }: Props) {
               type="date"
               name="fecha_validez"
               defaultValue={in30}
-              className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/20"
+              className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
             />
           </div>
         </div>
@@ -126,7 +126,7 @@ export function NewBudgetForm({ clientes }: Props) {
           <label className="block text-sm font-medium text-slate-700 mb-1.5">Condiciones de pago</label>
           <input
             name="condiciones"
-            className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/20"
+            className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
             placeholder="Ej: 50% a la firma, 50% a la entrega"
           />
         </div>
@@ -139,7 +139,7 @@ export function NewBudgetForm({ clientes }: Props) {
           <button
             type="button"
             onClick={() => setItems(prev => [...prev, { descripcion: '', cantidad: 1, precio_unitario: 0, descuento_porcentaje: 0, subtotal: 0 }])}
-            className="flex items-center gap-1.5 text-sm text-purple-600 hover:text-purple-700"
+            className="flex items-center gap-1.5 text-sm text-blue-600 hover:text-blue-700"
           >
             <Plus className="w-4 h-4" />
             Agregar ítem
@@ -162,7 +162,7 @@ export function NewBudgetForm({ clientes }: Props) {
                   value={item.descripcion}
                   onChange={e => updateItem(idx, 'descripcion', e.target.value)}
                   placeholder="Servicio o producto"
-                  className="w-full border border-slate-200 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/20"
+                  className="w-full border border-slate-200 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                 />
               </div>
               <div className="col-span-2">
@@ -170,7 +170,7 @@ export function NewBudgetForm({ clientes }: Props) {
                   type="number" min="1" step="1"
                   value={item.cantidad}
                   onChange={e => updateItem(idx, 'cantidad', Number(e.target.value))}
-                  className="w-full border border-slate-200 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/20"
+                  className="w-full border border-slate-200 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                 />
               </div>
               <div className="col-span-2">
@@ -178,7 +178,7 @@ export function NewBudgetForm({ clientes }: Props) {
                   type="number" min="0" step="0.01"
                   value={item.precio_unitario}
                   onChange={e => updateItem(idx, 'precio_unitario', Number(e.target.value))}
-                  className="w-full border border-slate-200 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/20"
+                  className="w-full border border-slate-200 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                 />
               </div>
               <div className="col-span-2">
@@ -186,7 +186,7 @@ export function NewBudgetForm({ clientes }: Props) {
                   type="number" min="0" max="100" step="0.5"
                   value={item.descuento_porcentaje}
                   onChange={e => updateItem(idx, 'descuento_porcentaje', Number(e.target.value))}
-                  className="w-full border border-slate-200 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/20"
+                  className="w-full border border-slate-200 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                 />
               </div>
               <div className="col-span-1 text-right text-sm font-medium text-slate-800">
@@ -218,7 +218,7 @@ export function NewBudgetForm({ clientes }: Props) {
         <textarea
           name="notas"
           rows={3}
-          className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-purple-500/20"
+          className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-500/20"
           placeholder="Alcance del trabajo, exclusiones, condiciones especiales..."
         />
       </div>
@@ -227,7 +227,7 @@ export function NewBudgetForm({ clientes }: Props) {
         <button
           type="submit"
           disabled={isPending}
-          className="flex-1 bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-white font-medium py-2.5 px-4 rounded-lg text-sm transition-colors"
+          className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-medium py-2.5 px-4 rounded-lg text-sm transition-colors"
         >
           {isPending ? 'Creando...' : 'Crear presupuesto'}
         </button>
