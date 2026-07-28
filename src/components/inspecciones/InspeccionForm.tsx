@@ -262,7 +262,7 @@ export function InspeccionForm({ equipos, inspectorDefault, equipoPreset }: {
                           const m = ITEM_ESTADO_META[st]
                           return (
                             <button key={st} type="button" onClick={() => setItem(ci, ii, { estado: st })}
-                              className={cn('px-2.5 py-1 text-xs font-semibold transition-colors',
+                              className={cn('px-3 py-1.5 text-xs font-semibold transition-colors',
                                 active ? cn(m.cls, 'border-0') : 'text-slate-400 hover:bg-slate-50')}
                               title={m.label}>
                               {m.short}

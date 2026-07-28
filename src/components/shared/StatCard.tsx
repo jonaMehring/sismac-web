@@ -23,7 +23,7 @@ export function StatCard({
     <div
       onClick={onClick}
       className={cn(
-        'relative bg-white rounded-2xl p-5 flex flex-col gap-4 overflow-hidden',
+        'relative bg-white rounded-2xl p-4 sm:p-5 flex flex-col gap-3 sm:gap-4 overflow-hidden',
         'border border-slate-100 card-hover',
         onClick && 'cursor-pointer',
         alert ? 'border-red-200 bg-gradient-to-br from-red-50/70 to-white' : '',
@@ -47,7 +47,7 @@ export function StatCard({
       </div>
       <div>
         <p className={cn(
-          'text-[1.9rem] font-bold tracking-tight leading-none',
+          'text-2xl sm:text-[1.9rem] font-bold tracking-tight leading-none break-words',
           alert ? 'text-red-600' : 'text-slate-900'
         )}>
           {value}

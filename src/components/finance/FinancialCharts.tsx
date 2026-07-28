@@ -35,7 +35,7 @@ export function FinancialCharts({ data, categorias }: Props) {
   return (
     <div className="space-y-6">
       {/* KPIs resumen */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {[
           { label: 'Gastos (6 meses)', value: totalGastos6m, color: 'text-red-600' },
           { label: 'Facturado (6 meses)', value: totalFacturado6m, color: 'text-blue-600' },
