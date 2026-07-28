@@ -3,14 +3,15 @@
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Logo, LogoMark } from '@/components/brand/Logo'
-import { Eye, EyeOff, Loader2, AlertCircle, ShieldCheck, Activity, Layers, Lock } from 'lucide-react'
+import { Eye, EyeOff, Loader2, AlertCircle, ShieldCheck, Activity, Layers, CheckCircle2 } from 'lucide-react'
 
 const DEMO_EMAIL = 'admin@gmail.com'
 const DEMO_PASSWORD = 'admin123'
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  // Credenciales de la muestra ya cargadas: el cliente solo toca "Ingresar"
+  const [email, setEmail] = useState(DEMO_EMAIL)
+  const [password, setPassword] = useState(DEMO_PASSWORD)
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -37,12 +38,6 @@ export default function LoginPage() {
     }
 
     window.location.href = '/dashboard'
-  }
-
-  function fillDemo() {
-    setEmail(DEMO_EMAIL)
-    setPassword(DEMO_PASSWORD)
-    setError('')
   }
 
   return (
@@ -168,24 +163,20 @@ export default function LoginPage() {
               >
                 {loading ? (
                   <><Loader2 className="w-4 h-4 animate-spin" /> Ingresando...</>
-                ) : 'Ingresar al sistema'}
+                ) : 'Ingresar a la demostración'}
               </button>
             </form>
 
-            {/* Acceso de demostración */}
-            <button
-              onClick={fillDemo}
-              type="button"
-              className="w-full mt-4 flex items-center gap-3 rounded-xl border border-dashed border-slate-200 bg-slate-50/60 px-4 py-3 text-left hover:border-blue-300 hover:bg-blue-50/40 transition-colors group"
-            >
-              <span className="w-8 h-8 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                <Lock className="w-4 h-4" />
+            {/* Aviso: datos de demostración ya cargados */}
+            <div className="mt-4 flex items-center gap-3 rounded-xl border border-emerald-100 bg-emerald-50/60 px-4 py-3">
+              <span className="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0">
+                <CheckCircle2 className="w-4 h-4" />
               </span>
               <span className="min-w-0">
-                <span className="block text-xs font-semibold text-slate-700">Acceso de demostración</span>
-                <span className="block text-xs text-slate-400 truncate">admin@gmail.com · admin123 — tocá para autocompletar</span>
+                <span className="block text-xs font-semibold text-slate-700">Datos de demostración ya cargados</span>
+                <span className="block text-xs text-slate-400">Solo tocá “Ingresar a la demostración”.</span>
               </span>
-            </button>
+            </div>
           </div>
 
           <p className="text-center text-white/30 text-xs mt-6">
