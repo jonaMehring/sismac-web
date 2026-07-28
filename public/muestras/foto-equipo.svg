@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="800" y2="600" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#334155"/><stop offset="1" stop-color="#0f172a"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#bg)"/>
+  <g opacity="0.9">
+    <circle cx="400" cy="270" r="120" fill="none" stroke="#64748b" stroke-width="14"/>
+    <circle cx="400" cy="270" r="60" fill="#475569"/>
+    <rect x="250" y="380" width="300" height="70" rx="10" fill="#1e293b" stroke="#475569" stroke-width="3"/>
+    <g stroke="#94a3b8" stroke-width="6" stroke-linecap="round">
+      <line x1="400" y1="150" x2="400" y2="120"/><line x1="520" y1="270" x2="550" y2="270"/>
+      <line x1="280" y1="270" x2="250" y2="270"/><line x1="485" y1="185" x2="507" y2="163"/>
+    </g>
+  </g>
+  <rect x="0" y="540" width="800" height="60" fill="rgba(0,0,0,0.55)"/>
+  <text x="24" y="578" fill="#e2e8f0" font-family="Arial" font-size="26" font-weight="bold">📷 Vista general del equipo</text>
+  <text x="640" y="578" fill="#94a3b8" font-family="Arial" font-size="22">INGESAR</text>
+</svg>

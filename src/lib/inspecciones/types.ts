@@ -17,14 +17,24 @@ export interface InspEquipo {
   cliente_id: string
   ubicacion?: string | null
   fecha_puesta_servicio?: string | null
+  anio?: number | null
+  patente?: string | null
+  foto?: string | null
   estado: EquipoEstado
   criticidad: Criticidad
   horas_uso?: number | null
   potencia?: string | null
+  observaciones?: string | null
   ultima_inspeccion?: string | null
   proxima_inspeccion?: string | null
   created_at: string
   cliente?: { nombre: string } | null
+}
+
+export interface InspFoto {
+  url: string
+  punto?: string | null
+  descripcion?: string | null
 }
 
 export interface ChecklistItem {
@@ -51,6 +61,7 @@ export interface Inspeccion {
   tipo: TipoInspeccion
   inspector: string
   fecha: string
+  lugar?: string | null
   resultado: InspeccionResultado
   estado_resultante: EstadoResultante
   observaciones?: string | null
@@ -62,6 +73,7 @@ export interface Inspeccion {
   created_at: string
   checklist?: ChecklistCategoria[]
   mediciones?: Medicion[]
+  fotos?: InspFoto[]
   equipo?: { codigo: string; nombre: string } | null
   cliente?: { nombre: string } | null
 }

@@ -56,9 +56,14 @@ export default async function EquipoDetailPage({
       {/* Header */}
       <div className="bg-white rounded-2xl border border-slate-100 p-6 mb-4" style={{ boxShadow: 'var(--shadow-card)' }}>
         <div className="flex items-start gap-4 flex-wrap">
-          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#0A2540] to-[#2563EB] flex items-center justify-center text-white shrink-0">
-            <Cog className="w-7 h-7" />
-          </div>
+          {eq.foto ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={eq.foto} alt={eq.nombre} className="w-20 h-20 rounded-2xl object-cover border border-slate-200 shrink-0" />
+          ) : (
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#0A2540] to-[#2563EB] flex items-center justify-center text-white shrink-0">
+              <Cog className="w-7 h-7" />
+            </div>
+          )}
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
               <span className="font-mono text-sm text-blue-600 font-semibold">{eq.codigo}</span>
@@ -116,6 +121,7 @@ export default async function EquipoDetailPage({
             {[
               ['Código / TAG', eq.codigo], ['Nombre', eq.nombre], ['Tipo', eq.tipo],
               ['Marca', eq.marca], ['Modelo', eq.modelo], ['N° de serie', eq.numero_serie],
+              ['Año', eq.anio != null ? String(eq.anio) : null], ['Patente', eq.patente],
               ['Potencia / Capacidad', eq.potencia], ['Cliente', eq.cliente?.nombre],
               ['Ubicación', eq.ubicacion], ['Puesta en servicio', eq.fecha_puesta_servicio ? formatDate(eq.fecha_puesta_servicio) : null],
               ['Horas de uso', eq.horas_uso != null ? `${eq.horas_uso.toLocaleString('es-AR')} h` : null],
@@ -127,6 +133,12 @@ export default async function EquipoDetailPage({
               </div>
             ))}
           </dl>
+          {eq.observaciones && (
+            <div className="mt-4 pt-4 border-t border-slate-50">
+              <p className="text-xs font-bold text-slate-500 uppercase tracking-wide mb-1">Observaciones</p>
+              <p className="text-sm text-slate-600 leading-relaxed whitespace-pre-wrap">{eq.observaciones}</p>
+            </div>
+          )}
         </div>
       )}
 

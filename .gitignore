@@ -39,6 +39,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# documentación interna (no se sube al repo público)
+_DOCUMENTACION-INGESAR.md
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

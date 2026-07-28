@@ -10,10 +10,14 @@ export const createEquipoSchema = z.object({
   cliente_id: z.string().min(1, 'Seleccioná un cliente'),
   ubicacion: z.string().optional().nullable(),
   fecha_puesta_servicio: z.string().optional().nullable(),
+  anio: z.number().optional().nullable(),
+  patente: z.string().optional().nullable(),
+  foto: z.string().optional().nullable(),
   estado: z.enum(['operativo', 'mantenimiento', 'fuera_servicio', 'baja']),
   criticidad: z.enum(['baja', 'media', 'alta', 'critica']),
   potencia: z.string().optional().nullable(),
   horas_uso: z.number().optional().nullable(),
+  observaciones: z.string().optional().nullable(),
 })
 
 const checklistItemSchema = z.object({
@@ -33,11 +37,18 @@ const medicionSchema = z.object({
   estado: z.enum(['conforme', 'observado', 'no_conforme', 'na']),
 })
 
+const fotoSchema = z.object({
+  url: z.string(),
+  punto: z.string().optional().nullable(),
+  descripcion: z.string().optional().nullable(),
+})
+
 export const createInspeccionSchema = z.object({
   equipo_id: z.string().min(1, 'Seleccioná el equipo a inspeccionar'),
   tipo: z.enum(['preventiva', 'correctiva', 'predictiva', 'certificacion', 'seguridad', 'puesta_marcha']),
   inspector: z.string().min(2, 'Indicá el inspector responsable'),
   fecha: z.string().min(1, 'La fecha es obligatoria'),
+  lugar: z.string().optional().nullable(),
   condicion_operacion: z.string().optional().nullable(),
   resultado: z.enum(['aprobado', 'condicional', 'rechazado']),
   estado_resultante: z.enum(['operativo', 'operativo_obs', 'fuera_servicio']),
@@ -47,6 +58,7 @@ export const createInspeccionSchema = z.object({
   requiere_certificacion: z.boolean().optional().default(false),
   checklist: z.array(checklistCategoriaSchema),
   mediciones: z.array(medicionSchema),
+  fotos: z.array(fotoSchema).optional().default([]),
 })
 
 export type CreateEquipoInput = z.infer<typeof createEquipoSchema>

@@ -3,8 +3,9 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import {
   ArrowLeft, Cog, Calendar, User, Activity, ClipboardCheck, Gauge, ListChecks,
-  FileText, ShieldCheck, CalendarClock, Printer,
+  FileText, ShieldCheck, CalendarClock, MapPin, Camera,
 } from 'lucide-react'
+import { PrintButton } from '@/components/inspecciones/PrintButton'
 import { formatDate } from '@/lib/utils/dates'
 import {
   TipoInspeccionBadge, ResultadoBadge, EstadoResultanteBadge, ItemEstadoBadge,
@@ -33,13 +34,11 @@ export default async function InspeccionDetailPage({ params }: { params: Promise
 
   return (
     <div className="max-w-4xl mx-auto">
-      <div className="mb-4 flex items-center justify-between">
+      <div className="mb-4 flex items-center justify-between no-print">
         <Link href="/inspecciones" className="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-700">
           <ArrowLeft className="w-4 h-4" /> Volver a inspecciones
         </Link>
-        <Link href={`/inspecciones/${id}`} className="hidden sm:inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-700 border border-slate-200 rounded-xl px-3 py-1.5">
-          <Printer className="w-4 h-4" /> Imprimir
-        </Link>
+        <PrintButton />
       </div>
 
       {/* Encabezado del informe */}
@@ -70,6 +69,13 @@ export default async function InspeccionDetailPage({ params }: { params: Promise
             </div>
           ))}
         </div>
+        {insp.lugar && (
+          <div className="bg-white px-4 py-2.5 border-t border-slate-50 flex items-center gap-1.5">
+            <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+            <span className="text-[0.68rem] text-slate-400 uppercase tracking-wide">Lugar:</span>
+            <span className="text-sm font-medium text-slate-700 truncate">{insp.lugar}</span>
+          </div>
+        )}
       </div>
 
       {/* Estado resultante + resumen */}
@@ -146,6 +152,29 @@ export default async function InspeccionDetailPage({ params }: { params: Promise
                 ))}
               </tbody>
             </table>
+          </div>
+        </div>
+      )}
+
+      {/* Registro fotográfico */}
+      {(insp.fotos ?? []).length > 0 && (
+        <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden mb-5" style={{ boxShadow: 'var(--shadow-card)' }}>
+          <div className="flex items-center gap-2 px-5 py-4 border-b border-slate-50">
+            <Camera className="w-4 h-4 text-slate-400" />
+            <h2 className="font-semibold text-slate-800">Registro fotográfico</h2>
+            <span className="text-xs text-slate-400">({(insp.fotos ?? []).length})</span>
+          </div>
+          <div className="p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {(insp.fotos ?? []).map((f, i) => (
+              <figure key={i} className="rounded-xl border border-slate-100 overflow-hidden bg-slate-50">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={f.url} alt={f.descripcion ?? 'Fotografía'} className="w-full h-44 object-cover bg-slate-200" />
+                <figcaption className="p-3">
+                  {f.punto && <span className="inline-block text-[0.68rem] font-semibold text-blue-600 bg-blue-50 border border-blue-100 rounded-full px-2 py-0.5 mb-1">{f.punto}</span>}
+                  <p className="text-xs text-slate-600 leading-snug">{f.descripcion}</p>
+                </figcaption>
+              </figure>
+            ))}
           </div>
         </div>
       )}

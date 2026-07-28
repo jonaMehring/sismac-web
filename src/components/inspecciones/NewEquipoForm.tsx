@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createEquipo } from '@/app/actions/inspecciones'
 import { TIPOS_EQUIPO } from '@/lib/inspecciones/config'
-import { Cog, Loader2, AlertCircle, Save, ArrowLeft } from 'lucide-react'
+import { Cog, Loader2, AlertCircle, Save, ArrowLeft, ImagePlus, X } from 'lucide-react'
 
 const inputCls = 'w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm bg-slate-50/60 focus:outline-none focus:ring-2 focus:ring-blue-500/25 focus:bg-white focus:border-blue-400 transition-all'
 const labelCls = 'block text-xs font-semibold text-slate-600 mb-1.5'
@@ -14,12 +14,22 @@ export function NewEquipoForm({ clientes }: { clientes: { id: string; nombre: st
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
+  const [foto, setFotoState] = useState<string | null>(null)
+
+  function onFoto(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = () => setFotoState(String(reader.result))
+    reader.readAsDataURL(file)
+  }
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setError(null)
     const fd = new FormData(e.currentTarget)
     const horas = fd.get('horas_uso') as string
+    const anio = fd.get('anio') as string
     const data = {
       codigo: fd.get('codigo') as string,
       nombre: fd.get('nombre') as string,
@@ -30,10 +40,14 @@ export function NewEquipoForm({ clientes }: { clientes: { id: string; nombre: st
       cliente_id: fd.get('cliente_id') as string,
       ubicacion: (fd.get('ubicacion') as string) || null,
       fecha_puesta_servicio: (fd.get('fecha_puesta_servicio') as string) || null,
+      anio: anio ? Number(anio) : null,
+      patente: (fd.get('patente') as string) || null,
+      foto,
       estado: fd.get('estado') as 'operativo' | 'mantenimiento' | 'fuera_servicio' | 'baja',
       criticidad: fd.get('criticidad') as 'baja' | 'media' | 'alta' | 'critica',
       potencia: (fd.get('potencia') as string) || null,
       horas_uso: horas ? Number(horas) : null,
+      observaciones: (fd.get('observaciones') as string) || null,
     }
     startTransition(async () => {
       try {
@@ -100,6 +114,14 @@ export function NewEquipoForm({ clientes }: { clientes: { id: string; nombre: st
             <input name="potencia" className={inputCls} placeholder="Ej: 30 kW" />
           </div>
           <div>
+            <label className={labelCls}>Año</label>
+            <input type="number" name="anio" min="1950" max="2100" className={inputCls} placeholder="Ej: 2021" />
+          </div>
+          <div>
+            <label className={labelCls}>Patente <span className="text-slate-300">(si corresponde)</span></label>
+            <input name="patente" className={inputCls} placeholder="Ej: AB 123 CD" />
+          </div>
+          <div>
             <label className={labelCls}>Cliente *</label>
             <select name="cliente_id" required className={inputCls} defaultValue="">
               <option value="" disabled>— Seleccionar cliente —</option>
@@ -135,6 +157,27 @@ export function NewEquipoForm({ clientes }: { clientes: { id: string; nombre: st
           <div>
             <label className={labelCls}>Horas de uso</label>
             <input type="number" name="horas_uso" min="0" className={inputCls} placeholder="Ej: 12000" />
+          </div>
+          <div className="sm:col-span-2">
+            <label className={labelCls}>Observaciones</label>
+            <textarea name="observaciones" rows={2} className={`${inputCls} resize-none`} placeholder="Notas de la ficha técnica del equipo..." />
+          </div>
+          <div className="sm:col-span-2">
+            <label className={labelCls}>Fotografía del equipo</label>
+            {foto ? (
+              <div className="relative inline-block">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={foto} alt="Equipo" className="h-40 rounded-xl border border-slate-200 object-cover" />
+                <button type="button" onClick={() => setFotoState(null)} className="absolute -top-2 -right-2 bg-white border border-slate-200 rounded-full p-1 shadow-sm hover:bg-red-50">
+                  <X className="w-3.5 h-3.5 text-slate-500" />
+                </button>
+              </div>
+            ) : (
+              <label className="flex items-center justify-center gap-2 rounded-xl border-2 border-dashed border-slate-200 hover:border-blue-300 hover:bg-blue-50/40 py-6 cursor-pointer transition-colors text-sm font-semibold text-slate-500">
+                <ImagePlus className="w-5 h-5 text-blue-500" /> Subir fotografía
+                <input type="file" accept="image/*" className="hidden" onChange={onFoto} />
+              </label>
+            )}
           </div>
         </div>
 

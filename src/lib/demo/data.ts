@@ -173,10 +173,10 @@ export const DEMO_DATA: Record<string, unknown[]> = {
 
   // ── MÓDULO INSPECCIONES DE EQUIPOS ──
   insp_equipos: [
-    { id: 'ie1', codigo: 'MOT-001', nombre: 'Motor principal línea A', tipo: 'Motor eléctrico', marca: 'WEG', modelo: 'W22 132M', numero_serie: 'WEG-2021-45871', cliente_id: 'c1', ubicacion: 'Planta Principal Rosario — Línea A', fecha_puesta_servicio: d(-820), estado: 'operativo', criticidad: 'alta', horas_uso: 14200, potencia: '30 kW', ultima_inspeccion: d(-25), proxima_inspeccion: d(65), created_at: d(-820) + 'T00:00:00Z', cliente: { nombre: 'Aceros del Sur S.A.' } },
-    { id: 'ie2', codigo: 'PRE-002', nombre: 'Prensa hidráulica 200T', tipo: 'Prensa', marca: 'Schuler', modelo: 'PH-200', numero_serie: 'SCH-2019-1122', cliente_id: 'c1', ubicacion: 'Planta Principal Rosario — Estampado', fecha_puesta_servicio: d(-1400), estado: 'mantenimiento', criticidad: 'critica', horas_uso: 22800, potencia: '200 Tn', ultima_inspeccion: d(-8), proxima_inspeccion: d(7), created_at: d(-1400) + 'T00:00:00Z', cliente: { nombre: 'Aceros del Sur S.A.' } },
-    { id: 'ie3', codigo: 'COM-003', nombre: 'Compresor de tornillo', tipo: 'Compresor', marca: 'Atlas Copco', modelo: 'GA-55', numero_serie: 'AC-2020-99341', cliente_id: 'c2', ubicacion: 'Sala de máquinas — Frigorífico', fecha_puesta_servicio: d(-980), estado: 'operativo', criticidad: 'alta', horas_uso: 18600, potencia: '55 kW', ultima_inspeccion: d(-40), proxima_inspeccion: d(50), created_at: d(-980) + 'T00:00:00Z', cliente: { nombre: 'Frigorifico Norte S.R.L.' } },
-    { id: 'ie4', codigo: 'CAL-004', nombre: 'Caldera de vapor', tipo: 'Caldera', marca: 'Fontanet', modelo: 'FV-3000', numero_serie: 'FON-2018-7754', cliente_id: 'c2', ubicacion: 'Sala de calderas', fecha_puesta_servicio: d(-1900), estado: 'operativo', criticidad: 'critica', horas_uso: 31200, potencia: '3000 kg/h', ultima_inspeccion: d(-15), proxima_inspeccion: d(-3), created_at: d(-1900) + 'T00:00:00Z', cliente: { nombre: 'Frigorifico Norte S.R.L.' } },
+    { id: 'ie1', codigo: 'MOT-001', nombre: 'Motor principal línea A', tipo: 'Motor eléctrico', marca: 'WEG', modelo: 'W22 132M', numero_serie: 'WEG-2021-45871', anio: 2021, patente: null, foto: '/muestras/foto-equipo.svg', cliente_id: 'c1', ubicacion: 'Planta Principal Rosario — Línea A', fecha_puesta_servicio: d(-820), estado: 'operativo', criticidad: 'alta', horas_uso: 14200, potencia: '30 kW', observaciones: 'Motor de accionamiento de la línea de laminado. Requiere lubricación programada cada 90 días.', ultima_inspeccion: d(-25), proxima_inspeccion: d(65), created_at: d(-820) + 'T00:00:00Z', cliente: { nombre: 'Aceros del Sur S.A.' } },
+    { id: 'ie2', codigo: 'PRE-002', nombre: 'Prensa hidráulica 200T', tipo: 'Prensa', marca: 'Schuler', modelo: 'PH-200', numero_serie: 'SCH-2019-1122', anio: 2019, patente: null, foto: null, cliente_id: 'c1', ubicacion: 'Planta Principal Rosario — Estampado', fecha_puesta_servicio: d(-1400), estado: 'mantenimiento', criticidad: 'critica', horas_uso: 22800, potencia: '200 Tn', observaciones: 'En mantenimiento correctivo por desgaste de sellos hidráulicos.', ultima_inspeccion: d(-8), proxima_inspeccion: d(7), created_at: d(-1400) + 'T00:00:00Z', cliente: { nombre: 'Aceros del Sur S.A.' } },
+    { id: 'ie3', codigo: 'COM-003', nombre: 'Compresor de tornillo', tipo: 'Compresor', marca: 'Atlas Copco', modelo: 'GA-55', numero_serie: 'AC-2020-99341', anio: 2020, patente: null, foto: null, cliente_id: 'c2', ubicacion: 'Sala de máquinas — Frigorífico', fecha_puesta_servicio: d(-980), estado: 'operativo', criticidad: 'alta', horas_uso: 18600, potencia: '55 kW', observaciones: null, ultima_inspeccion: d(-40), proxima_inspeccion: d(50), created_at: d(-980) + 'T00:00:00Z', cliente: { nombre: 'Frigorifico Norte S.R.L.' } },
+    { id: 'ie4', codigo: 'CAL-004', nombre: 'Caldera de vapor', tipo: 'Caldera', marca: 'Fontanet', modelo: 'FV-3000', numero_serie: 'FON-2018-7754', anio: 2018, patente: null, foto: '/muestras/foto-equipo.svg', cliente_id: 'c2', ubicacion: 'Sala de calderas', fecha_puesta_servicio: d(-1900), estado: 'operativo', criticidad: 'critica', horas_uso: 31200, potencia: '3000 kg/h', observaciones: 'Recipiente sometido a presión — requiere habilitación anual con prueba hidráulica.', ultima_inspeccion: d(-15), proxima_inspeccion: d(-3), created_at: d(-1900) + 'T00:00:00Z', cliente: { nombre: 'Frigorifico Norte S.R.L.' } },
     { id: 'ie5', codigo: 'BOM-005', nombre: 'Bomba centrífuga proceso', tipo: 'Bomba', marca: 'Grundfos', modelo: 'NB-65', numero_serie: 'GRU-2022-33210', cliente_id: 'c3', ubicacion: 'Área de proceso químico', fecha_puesta_servicio: d(-560), estado: 'operativo', criticidad: 'media', horas_uso: 9800, potencia: '15 kW', ultima_inspeccion: d(-55), proxima_inspeccion: d(35), created_at: d(-560) + 'T00:00:00Z', cliente: { nombre: 'Química Industrial Patagonia' } },
     { id: 'ie6', codigo: 'PGR-006', nombre: 'Puente grúa 10T', tipo: 'Puente grúa', marca: 'Demag', modelo: 'EKKE-10', numero_serie: 'DEM-2017-5590', cliente_id: 'c3', ubicacion: 'Nave de producción', fecha_puesta_servicio: d(-2100), estado: 'fuera_servicio', criticidad: 'critica', horas_uso: 12400, potencia: '10 Tn', ultima_inspeccion: d(-5), proxima_inspeccion: d(2), created_at: d(-2100) + 'T00:00:00Z', cliente: { nombre: 'Química Industrial Patagonia' } },
     { id: 'ie7', codigo: 'TAB-007', nombre: 'Tablero general BT', tipo: 'Tablero eléctrico', marca: 'Schneider', modelo: 'Prisma-P', numero_serie: 'SE-2021-88120', cliente_id: 'c4', ubicacion: 'Sala eléctrica principal', fecha_puesta_servicio: d(-740), estado: 'operativo', criticidad: 'alta', horas_uso: 0, potencia: '630 A', ultima_inspeccion: d(-90), proxima_inspeccion: d(90), created_at: d(-740) + 'T00:00:00Z', cliente: { nombre: 'Textil Pampa S.A.' } },
@@ -192,6 +192,7 @@ export const DEMO_DATA: Record<string, unknown[]> = {
       observaciones: 'Equipo en excelente estado general. Se realizó lubricación de rodamientos y verificación de aislación. Todos los parámetros dentro de rango.',
       acciones_correctivas: 'Ninguna. Mantener plan de lubricación cada 90 días.',
       proxima_inspeccion: d(65), requiere_certificacion: false, condicion_operacion: 'En marcha',
+      lugar: 'Planta Principal Rosario — Línea A',
       cliente_id: 'c1', created_at: d(-25) + 'T09:30:00Z',
       equipo: { codigo: 'MOT-001', nombre: 'Motor principal línea A' }, cliente: { nombre: 'Aceros del Sur S.A.' },
       checklist: buildChecklist(),
@@ -201,6 +202,9 @@ export const DEMO_DATA: Record<string, unknown[]> = {
         { parametro: 'Corriente de motor', valor: '52', unidad: 'A', rango: '≤ 58', estado: 'conforme' },
         { parametro: 'Resistencia de aislación', valor: '120', unidad: 'MΩ', rango: '> 1', estado: 'conforme' },
       ],
+      fotos: [
+        { url: '/muestras/foto-equipo.svg', punto: 'Vista general', descripcion: 'Motor en condiciones normales de operación' },
+      ],
     },
     {
       id: 'ins2', numero: 'INSP-2026-0002', equipo_id: 'ie2', tipo: 'correctiva', inspector: 'Martín Rossi',
@@ -208,6 +212,7 @@ export const DEMO_DATA: Record<string, unknown[]> = {
       observaciones: 'Se detectó desgaste en sellos hidráulicos y una fuga menor en la línea de presión. Vibración levemente elevada en el sistema de bombeo.',
       acciones_correctivas: 'Reemplazar sellos hidráulicos (repuesto solicitado). Reapretar conexiones línea de presión. Reinspección en 7 días.',
       proxima_inspeccion: d(7), requiere_certificacion: false, condicion_operacion: 'Detenida',
+      lugar: 'Planta Principal Rosario — Estampado',
       cliente_id: 'c1', created_at: d(-8) + 'T11:00:00Z',
       equipo: { codigo: 'PRE-002', nombre: 'Prensa hidráulica 200T' }, cliente: { nombre: 'Aceros del Sur S.A.' },
       checklist: buildChecklist(
@@ -219,6 +224,9 @@ export const DEMO_DATA: Record<string, unknown[]> = {
         { parametro: 'Nivel de vibración', valor: '5.1', unidad: 'mm/s', rango: '< 4.5', estado: 'observado' },
         { parametro: 'Temperatura de operación', valor: '68', unidad: '°C', rango: '< 75', estado: 'conforme' },
       ],
+      fotos: [
+        { url: '/muestras/foto-fuga.svg', punto: 'Fugas de aceite / fluidos', descripcion: 'Pérdida de aceite en línea de presión' },
+      ],
     },
     {
       id: 'ins3', numero: 'INSP-2026-0003', equipo_id: 'ie4', tipo: 'certificacion', inspector: 'María García',
@@ -226,6 +234,7 @@ export const DEMO_DATA: Record<string, unknown[]> = {
       observaciones: 'Inspección reglamentaria de recipiente sometido a presión. Prueba hidráulica satisfactoria. Válvulas de seguridad calibradas y precintadas.',
       acciones_correctivas: 'Renovar habilitación ante organismo. Próxima prueba hidráulica según cronograma anual.',
       proxima_inspeccion: d(350), requiere_certificacion: true, condicion_operacion: 'Detenida',
+      lugar: 'Sala de calderas — Frigorífico Norte',
       cliente_id: 'c2', created_at: d(-15) + 'T08:00:00Z',
       equipo: { codigo: 'CAL-004', nombre: 'Caldera de vapor' }, cliente: { nombre: 'Frigorifico Norte S.R.L.' },
       checklist: buildChecklist({ '3.3': 'observado' }, { '3.3': 'Reponer cartel de presión máxima' }),
@@ -234,6 +243,9 @@ export const DEMO_DATA: Record<string, unknown[]> = {
         { parametro: 'Espesor de pared', valor: '11.4', unidad: 'mm', rango: '> 9', estado: 'conforme' },
         { parametro: 'Temperatura de operación', valor: '174', unidad: '°C', rango: '< 185', estado: 'conforme' },
       ],
+      fotos: [
+        { url: '/muestras/foto-equipo.svg', punto: 'Vista general', descripcion: 'Caldera tras prueba hidráulica satisfactoria' },
+      ],
     },
     {
       id: 'ins4', numero: 'INSP-2026-0004', equipo_id: 'ie6', tipo: 'seguridad', inspector: 'Carlos López',
@@ -241,6 +253,7 @@ export const DEMO_DATA: Record<string, unknown[]> = {
       observaciones: 'Falla crítica detectada en el sistema de frenado del carro y desgaste severo en cable de izaje. El equipo NO debe operar hasta reparación.',
       acciones_correctivas: 'BLOQUEO Y ETIQUETADO del equipo. Reemplazo inmediato de cable de izaje y reparación del sistema de frenos. Certificación obligatoria antes de reingreso a servicio.',
       proxima_inspeccion: d(2), requiere_certificacion: true, condicion_operacion: 'Detenida',
+      lugar: 'Nave de producción — Química Patagonia',
       cliente_id: 'c3', created_at: d(-5) + 'T15:30:00Z',
       equipo: { codigo: 'PGR-006', nombre: 'Puente grúa 10T' }, cliente: { nombre: 'Química Industrial Patagonia' },
       checklist: buildChecklist(
@@ -250,6 +263,10 @@ export const DEMO_DATA: Record<string, unknown[]> = {
       mediciones: [
         { parametro: 'Desgaste cable de izaje', valor: '12', unidad: '%', rango: '< 10', estado: 'no_conforme' },
         { parametro: 'Distancia de frenado', valor: '0.9', unidad: 'm', rango: '< 0.5', estado: 'no_conforme' },
+      ],
+      fotos: [
+        { url: '/muestras/foto-cable.svg', punto: 'Desgaste de componentes', descripcion: 'Cable de izaje con hilos cortados — reemplazo urgente' },
+        { url: '/muestras/foto-equipo.svg', punto: 'Vista general', descripcion: 'Puente grúa bloqueado y etiquetado' },
       ],
     },
     {

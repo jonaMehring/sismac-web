@@ -7,13 +7,14 @@ import { createInspeccion } from '@/app/actions/inspecciones'
 import {
   CHECKLIST_TEMPLATE, MEDICIONES_SUGERIDAS, ITEM_ESTADO_META,
   TIPO_INSPECCION_META, RESULTADO_META, ESTADO_RESULTANTE_META,
+  calcularResultado, calcularEstadoResultante, REGLA_RESULTADO_TEXTO,
   type ItemEstado,
 } from '@/lib/inspecciones/config'
-import type { InspEquipo } from '@/lib/inspecciones/types'
+import type { InspEquipo, InspFoto } from '@/lib/inspecciones/types'
 import { cn } from '@/lib/utils/cn'
 import {
   ClipboardCheck, Cog, ListChecks, Gauge, ClipboardList, Loader2, AlertCircle,
-  Plus, Trash2, Save, ArrowLeft, Info,
+  Plus, Trash2, Save, ArrowLeft, Info, Camera, ImagePlus,
 } from 'lucide-react'
 
 const ITEM_ESTADOS: ItemEstado[] = ['conforme', 'observado', 'no_conforme', 'na']
@@ -58,6 +59,7 @@ export function InspeccionForm({ equipos, inspectorDefault, equipoPreset }: {
   const [tipo, setTipo] = useState<string>('preventiva')
   const [fecha, setFecha] = useState(hoy)
   const [inspector, setInspector] = useState(inspectorDefault)
+  const [lugar, setLugar] = useState('')
   const [condicion, setCondicion] = useState('Detenida')
 
   // Checklist
@@ -80,15 +82,34 @@ export function InspeccionForm({ equipos, inspectorDefault, equipoPreset }: {
   const addMed = () => setMediciones(prev => [...prev, { parametro: '', valor: '', unidad: '', rango: '', estado: 'conforme' }])
   const delMed = (idx: number) => setMediciones(prev => prev.filter((_, i) => i !== idx))
 
-  // Resultado
-  const [estadoResultante, setEstadoResultante] = useState('operativo')
-  const [resultado, setResultado] = useState('aprobado')
+  // Registro fotográfico
+  const [fotos, setFotos] = useState<InspFoto[]>([])
+  function addFotos(files: FileList | null) {
+    if (!files) return
+    Array.from(files).forEach(file => {
+      const reader = new FileReader()
+      reader.onload = () => {
+        setFotos(prev => [...prev, { url: String(reader.result), punto: '', descripcion: file.name.replace(/\.[^.]+$/, '') }])
+      }
+      reader.readAsDataURL(file)
+    })
+  }
+  function setFoto(idx: number, patch: Partial<InspFoto>) {
+    setFotos(prev => prev.map((f, i) => i === idx ? { ...f, ...patch } : f))
+  }
+  const delFoto = (idx: number) => setFotos(prev => prev.filter((_, i) => i !== idx))
+
+  // Resultado (auto-calculado según el checklist y las mediciones)
   const [observaciones, setObservaciones] = useState('')
   const [acciones, setAcciones] = useState('')
   const [proxima, setProxima] = useState('')
   const [requiereCert, setRequiereCert] = useState(false)
 
   const equipoSel = useMemo(() => equipos.find(e => e.id === equipoId), [equipos, equipoId])
+  const puntosDisponibles = useMemo(() => checklist.flatMap(c => c.items.map(i => i.nombre)), [checklist])
+
+  const resultado = useMemo(() => calcularResultado(checklist, mediciones), [checklist, mediciones])
+  const estadoResultante = useMemo(() => calcularEstadoResultante(checklist, mediciones), [checklist, mediciones])
 
   // Resumen del checklist
   const resumen = useMemo(() => {
@@ -107,11 +128,11 @@ export function InspeccionForm({ equipos, inspectorDefault, equipoPreset }: {
     setError(null)
     if (!equipoId) { setError('Seleccioná el equipo a inspeccionar'); return }
     const payload = {
-      equipo_id: equipoId, tipo, inspector, fecha, condicion_operacion: condicion,
+      equipo_id: equipoId, tipo, inspector, fecha, lugar: lugar || null, condicion_operacion: condicion,
       resultado, estado_resultante: estadoResultante,
       observaciones: observaciones || null, acciones_correctivas: acciones || null,
       proxima_inspeccion: proxima || null, requiere_certificacion: requiereCert,
-      checklist, mediciones,
+      checklist, mediciones, fotos,
     }
     startTransition(async () => {
       try {
@@ -151,7 +172,11 @@ export function InspeccionForm({ equipos, inspectorDefault, equipoPreset }: {
         <div className="grid sm:grid-cols-2 gap-4">
           <div className="sm:col-span-2">
             <label className={labelCls}>Equipo *</label>
-            <select value={equipoId} onChange={e => setEquipoId(e.target.value)} required className={inputCls}>
+            <select value={equipoId} onChange={e => {
+              const id = e.target.value; setEquipoId(id)
+              const eq = equipos.find(x => x.id === id)
+              if (eq?.ubicacion && !lugar) setLugar(eq.ubicacion)
+            }} required className={inputCls}>
               <option value="">— Seleccionar equipo —</option>
               {equipos.map(eq => (
                 <option key={eq.id} value={eq.id}>{eq.codigo} · {eq.nombre} — {eq.cliente?.nombre}</option>
@@ -199,6 +224,10 @@ export function InspeccionForm({ equipos, inspectorDefault, equipoPreset }: {
             <select value={condicion} onChange={e => setCondicion(e.target.value)} className={inputCls}>
               <option>Detenida</option><option>En marcha</option><option>En prueba</option><option>Sin energía</option>
             </select>
+          </div>
+          <div className="sm:col-span-2 lg:col-span-4">
+            <label className={labelCls}>Lugar de la inspección</label>
+            <input value={lugar} onChange={e => setLugar(e.target.value)} className={inputCls} placeholder="Planta / sector donde se realizó la inspección" />
           </div>
         </div>
       </SectionCard>
@@ -294,21 +323,62 @@ export function InspeccionForm({ equipos, inspectorDefault, equipoPreset }: {
         </button>
       </SectionCard>
 
-      {/* 5. Resultado */}
+      {/* 5. Registro fotográfico */}
+      <SectionCard icon={Camera} title="Registro fotográfico" desc="Adjuntá fotos y asociálas a un punto del checklist" tint="slate">
+        <label className="flex items-center justify-center gap-2 rounded-xl border-2 border-dashed border-slate-200 hover:border-blue-300 hover:bg-blue-50/40 py-6 cursor-pointer transition-colors text-sm font-semibold text-slate-500">
+          <ImagePlus className="w-5 h-5 text-blue-500" /> Agregar fotografías
+          <input type="file" accept="image/*" multiple className="hidden" onChange={e => { addFotos(e.target.files); e.target.value = '' }} />
+        </label>
+
+        {fotos.length > 0 && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
+            {fotos.map((f, i) => (
+              <div key={i} className="rounded-xl border border-slate-100 overflow-hidden bg-slate-50">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={f.url} alt={f.descripcion ?? 'Foto'} className="w-full h-40 object-cover bg-slate-200" />
+                <div className="p-3 space-y-2">
+                  <input value={f.descripcion ?? ''} onChange={e => setFoto(i, { descripcion: e.target.value })}
+                    placeholder="Descripción de la foto"
+                    className="w-full border border-slate-200 rounded-lg px-2.5 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20" />
+                  <div className="flex items-center gap-2">
+                    <select value={f.punto ?? ''} onChange={e => setFoto(i, { punto: e.target.value })}
+                      className="flex-1 border border-slate-200 rounded-lg px-2 py-1.5 text-xs text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20">
+                      <option value="">Asociar a punto (opcional)</option>
+                      {puntosDisponibles.map(p => <option key={p} value={p}>{p}</option>)}
+                    </select>
+                    <button type="button" onClick={() => delFoto(i)} className="text-slate-300 hover:text-red-500 p-1.5 shrink-0"><Trash2 className="w-4 h-4" /></button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+        {fotos.length === 0 && (
+          <p className="text-xs text-slate-400 text-center mt-3">Sin fotos cargadas. Durante la inspección podés sacar o subir fotos y vincularlas a cada punto.</p>
+        )}
+      </SectionCard>
+
+      {/* 6. Resultado */}
       <SectionCard icon={ClipboardCheck} title="Resultado y conclusiones" tint="amber">
+        {/* Resultado calculado automáticamente */}
+        <div className="rounded-2xl border border-slate-100 bg-gradient-to-br from-slate-50 to-white p-4 mb-4">
+          <div className="flex items-center justify-between gap-3 flex-wrap">
+            <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 uppercase tracking-wide">
+              <Info className="w-3.5 h-3.5 text-blue-500" /> Resultado automático
+            </div>
+            <div className="flex items-center gap-2">
+              <span className={cn('inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-bold border', RESULTADO_META[resultado].cls)}>
+                <span className={cn('w-2 h-2 rounded-full', RESULTADO_META[resultado].dot)} />
+                {RESULTADO_META[resultado].label}
+              </span>
+              <span className={cn('inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold border', ESTADO_RESULTANTE_META[estadoResultante].cls)}>
+                {ESTADO_RESULTANTE_META[estadoResultante].label}
+              </span>
+            </div>
+          </div>
+          <p className="text-xs text-slate-400 mt-2">El sistema calcula el resultado según el checklist y las mediciones: {REGLA_RESULTADO_TEXTO}.</p>
+        </div>
         <div className="grid sm:grid-cols-2 gap-4">
-          <div>
-            <label className={labelCls}>Estado resultante del equipo *</label>
-            <select value={estadoResultante} onChange={e => setEstadoResultante(e.target.value)} className={inputCls}>
-              {Object.entries(ESTADO_RESULTANTE_META).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
-            </select>
-          </div>
-          <div>
-            <label className={labelCls}>Resultado de la inspección *</label>
-            <select value={resultado} onChange={e => setResultado(e.target.value)} className={inputCls}>
-              {Object.entries(RESULTADO_META).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
-            </select>
-          </div>
           <div className="sm:col-span-2">
             <label className={labelCls}>Observaciones generales</label>
             <textarea value={observaciones} onChange={e => setObservaciones(e.target.value)} rows={3} className={`${inputCls} resize-none`} placeholder="Detalle del estado general, hallazgos y comentarios del inspector..." />

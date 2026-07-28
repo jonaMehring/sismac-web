@@ -178,3 +178,13 @@ body {
   background-size: 200% 100%;
   animation: shimmer 1.4s ease infinite;
 }
+
+/* Impresión — informe PDF limpio (oculta navegación) */
+@media print {
+  aside, header, .no-print { display: none !important; }
+  main { overflow: visible !important; }
+  body { background: #fff !important; }
+  .brand-surface { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .card, [class*="rounded-2xl"] { box-shadow: none !important; }
+  @page { margin: 14mm; }
+}

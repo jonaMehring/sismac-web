@@ -125,6 +125,40 @@ export const CRITICIDAD_META: Record<Criticidad, { label: string; cls: string }>
   critica: { label: 'Crítica', cls: 'bg-red-50 text-red-700 border-red-200' },
 }
 
+// ── Cálculo automático del resultado (regla configurable) ──
+// Regla: si hay algún "No conforme" → Rechazado; si hay algún "Observado" → Aprobado con
+// observaciones; si todo es Conforme/N-A → Aprobado.
+type EstadoLike = { estado: ItemEstado }
+export function recolectarEstados(
+  checklist: { items: EstadoLike[] }[] = [],
+  mediciones: EstadoLike[] = [],
+): ItemEstado[] {
+  return [...checklist.flatMap(c => c.items.map(i => i.estado)), ...mediciones.map(m => m.estado)]
+}
+
+export function calcularResultado(
+  checklist: { items: EstadoLike[] }[] = [],
+  mediciones: EstadoLike[] = [],
+): InspeccionResultado {
+  const estados = recolectarEstados(checklist, mediciones)
+  if (estados.includes('no_conforme')) return 'rechazado'
+  if (estados.includes('observado')) return 'condicional'
+  return 'aprobado'
+}
+
+export function calcularEstadoResultante(
+  checklist: { items: EstadoLike[] }[] = [],
+  mediciones: EstadoLike[] = [],
+): EstadoResultante {
+  const estados = recolectarEstados(checklist, mediciones)
+  if (estados.includes('no_conforme')) return 'fuera_servicio'
+  if (estados.includes('observado')) return 'operativo_obs'
+  return 'operativo'
+}
+
+export const REGLA_RESULTADO_TEXTO =
+  'Algún ítem "No conforme" → Rechazado · algún "Observado" → Aprobado con observaciones · todo conforme → Aprobado'
+
 export const TIPOS_EQUIPO = [
   'Motor eléctrico', 'Bomba', 'Compresor', 'Caldera', 'Tablero eléctrico',
   'Puente grúa', 'Cinta transportadora', 'Reductor', 'Prensa', 'Torno / CNC',

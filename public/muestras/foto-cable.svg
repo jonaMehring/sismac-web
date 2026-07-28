@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <defs>
+    <linearGradient id="bg4" x1="0" y1="0" x2="800" y2="600" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#44403c"/><stop offset="1" stop-color="#1c1917"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#bg4)"/>
+  <g stroke="#a8a29e" stroke-width="26" stroke-linecap="round" fill="none">
+    <path d="M120 300 Q400 220 680 300"/>
+  </g>
+  <g stroke="#78716c" stroke-width="3" opacity="0.7">
+    <path d="M120 300 Q400 220 680 300" fill="none"/>
+  </g>
+  <g stroke="#ef4444" stroke-width="4" stroke-linecap="round">
+    <line x1="360" y1="248" x2="345" y2="228"/><line x1="390" y1="244" x2="400" y2="222"/>
+    <line x1="420" y1="246" x2="435" y2="226"/><line x1="405" y1="262" x2="418" y2="280"/>
+  </g>
+  <circle cx="400" cy="248" r="70" fill="none" stroke="#ef4444" stroke-width="4" stroke-dasharray="10 8"/>
+  <rect x="0" y="540" width="800" height="60" fill="rgba(0,0,0,0.6)"/>
+  <text x="24" y="578" fill="#fca5a5" font-family="Arial" font-size="26" font-weight="bold">❌ Cable de izaje con hilos rotos</text>
+  <text x="640" y="578" fill="#94a3b8" font-family="Arial" font-size="22">INGESAR</text>
+</svg>
